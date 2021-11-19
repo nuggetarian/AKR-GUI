@@ -1,9 +1,10 @@
 import hashlib, sqlite3
 from tkinter import *
 from tkinter import ttk
+from pwdatabase import PwDatabase
 from sqliteoperations import Database
 import os
-from sqliteoperations import Database
+from PIL import ImageTk, Image
 
 absolutepath = os.path.abspath(__file__)
 fileDirectory = os.path.dirname(absolutepath)
@@ -13,14 +14,28 @@ master.title("Password Manager")
 master.iconbitmap(fileDirectory + "\\lock.ico")
 
 
-def loginScreen():
-  master.geometry("250x200")
+
+
+def firstScreen():
+  master.geometry("250x250")  
+  for widget in master.winfo_children():
+    widget.destroy()
+  
+  fekt_img = Image.open('fekt.png')
+  fekt_img = fekt_img.resize((228,74), Image.ANTIALIAS)
+  fekt_img = ImageTk.PhotoImage(fekt_img)
+  fekt_label = ttk.Label(image=fekt_img)
+  fekt_label.image = fekt_img
+  fekt_label.config(anchor=CENTER)
+  fekt_label.pack()
+  """fekt_label.grid(column=1, row=0)"""
+
 
   optionLbl = Label(master, text="Zvol moznost", font="Helvetica")
   optionLbl.config(anchor=CENTER)
   optionLbl.pack(pady=5)
 
-  logInBtn = Button(master, text="Log in", font="Helvetica")
+  logInBtn = Button(master, text="Log in", font="Helvetica", command=logInScreen)
   logInBtn.pack(pady=5)
   
   signUpBtn = Button(master, text="Sign up", font="Helvetica", command=signUpScreen)
@@ -30,21 +45,28 @@ def loginScreen():
   treeViewBtn.pack(pady=5)
 
 def signUpScreen():
+  #TOTO DAT DO LOGINSCREEN
+  """pwdb = PwDatabase()
+  pwdb.createTable()"""
+
   top = Toplevel(master)
   top.geometry("250x150")
   top.iconbitmap(fileDirectory + "\\lock.ico")
+
+  
+
   mailLbl = Label(top, text="E-mail:", font="Helvetica")
   mailLbl.config(anchor=CENTER)
   mailLbl.pack()
 
-  mailEntry = Entry(top)
+  mailEntry = Entry(top, width=30)
   mailEntry.pack()
 
   passwordLbl = Label(top, text="Password:", font="Helvetica")
   passwordLbl.config(anchor=CENTER)
   passwordLbl.pack()
 
-  passwordEntry = Entry(top, show="*")
+  passwordEntry = Entry(top, show="*", width=30)
   passwordEntry.pack()
 
   def addToDatabase():
@@ -54,18 +76,18 @@ def signUpScreen():
     db.addValues()
     top.destroy()
 
-  """def printDatabase():
+  def printDatabase():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     for row in c.execute('SELECT * FROM users;'):
-      print(row)"""
+      print(row)
 
   submitButton = Button(top, text="Submit", font="Helvetica", command=addToDatabase).pack(pady=5)
   #funButton = Button(top, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
 
 def treeView():
     treeWindow = Toplevel(master)
-    treeWindow.geometry("500x500")
+    treeWindow.geometry("450x250")
     my_tree = ttk.Treeview(treeWindow)
 
     my_tree['columns'] = ("Service", "E-mail", "Password")
@@ -97,6 +119,47 @@ def treeView():
 
     my_tree.pack(pady=20)
 
-loginScreen()
+def logInScreen():
+  pwdb = PwDatabase()
+  pwdb.createTable()
+
+  for widget in master.winfo_children():
+    widget.destroy()
+  master.geometry("250x200")
+
+  mailLbl = Label(master, text="E-mail:", font="Helvetica")
+  mailLbl.config(anchor=CENTER)
+  mailLbl.pack()
+
+  mailEntry = Entry(master, width=30)
+  mailEntry.pack()
+
+  passwordLbl = Label(master, text="Password:", font="Helvetica")
+  passwordLbl.config(anchor=CENTER)
+  passwordLbl.pack()
+
+  passwordEntry = Entry(master, show="*", width=30)
+  passwordEntry.pack()
+
+  def comparePasswords():
+    mail = mailEntry.get()
+    password = passwordEntry.get()
+    db = Database(mail, password)
+    if (db.comparePasswords() == True):
+      success = Label(master, text="Spravne heslo", font="Helvetica")
+      success.config(anchor=CENTER)
+      success.pack()
+    else:
+      failure = Label(master, text="Nespravne heslo", font="Helvetica")
+      failure.config(anchor=CENTER)
+      failure.pack()
+
+  submitButton = Button(master, text="Submit", font="Helvetica", command=comparePasswords).pack(pady=5)
+  backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
+
+
+
+
+firstScreen()
 master.mainloop()
 
