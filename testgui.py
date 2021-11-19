@@ -31,7 +31,8 @@ def loginScreen():
 
 def signUpScreen():
   top = Toplevel(master)
-  top.geometry("250x200")
+  top.geometry("250x150")
+  top.iconbitmap(fileDirectory + "\\lock.ico")
   mailLbl = Label(top, text="E-mail:", font="Helvetica")
   mailLbl.config(anchor=CENTER)
   mailLbl.pack()
@@ -46,20 +47,21 @@ def signUpScreen():
   passwordEntry = Entry(top, show="*")
   passwordEntry.pack()
 
-  def printEmail():
+  def addToDatabase():
     mail = mailEntry.get()
     password = passwordEntry.get()
     db = Database(mail, password)
     db.addValues()
+    top.destroy()
 
-  def printDatabase():
+  """def printDatabase():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     for row in c.execute('SELECT * FROM users;'):
-      print(row)
+      print(row)"""
 
-  submitButton = Button(top, text="Submit", font="Helvetica", command=printEmail).pack(pady=5)
-  funButton = Button(top, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
+  submitButton = Button(top, text="Submit", font="Helvetica", command=addToDatabase).pack(pady=5)
+  #funButton = Button(top, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
 
 def treeView():
     treeWindow = Toplevel(master)
