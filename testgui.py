@@ -13,8 +13,7 @@ master = Tk()
 master.title("Password Manager")
 master.iconbitmap(fileDirectory + "\\lock.ico")
 
-
-
+#NIEČO SPRAVIŤ BIELE = xxxx.configure(background="white")
 
 def firstScreen():
   master.geometry("250x250")  
@@ -28,7 +27,6 @@ def firstScreen():
   fekt_label.image = fekt_img
   fekt_label.config(anchor=CENTER)
   fekt_label.pack()
-  """fekt_label.grid(column=1, row=0)"""
 
 
   optionLbl = Label(master, text="Zvol moznost", font="Helvetica")
@@ -38,8 +36,15 @@ def firstScreen():
   logInBtn = Button(master, text="Log in", font="Helvetica", command=logInScreen)
   logInBtn.pack(pady=5)
   
-  signUpBtn = Button(master, text="Sign up", font="Helvetica", command=signUpScreen)
+  global signUpImage
+  signUpImage = PhotoImage(file='signUp.png')
+
+  signUpBtn = Button(master, image=signUpImage, command=signUpScreen, borderwidth=0)
+  #signUpBtn.configure(background="white")  
+  #signUpBtn = Button(master, text="Sign up", font="Helvetica", command=signUpScreen)
   signUpBtn.pack(pady=5)
+
+
 
   treeViewBtn = Button(master, text="TreeView", font="Helvetica", command=treeView)
   treeViewBtn.pack(pady=5)
