@@ -16,7 +16,8 @@ master.iconbitmap(fileDirectory + "\\lock.ico")
 #NIEČO SPRAVIŤ BIELE = xxxx.configure(background="white")
 
 def firstScreen():
-  master.geometry("250x250")  
+  master.geometry("250x250")
+  master.configure(background="white")  
   for widget in master.winfo_children():
     widget.destroy()
   
@@ -25,29 +26,33 @@ def firstScreen():
   fekt_img = ImageTk.PhotoImage(fekt_img)
   fekt_label = ttk.Label(image=fekt_img)
   fekt_label.image = fekt_img
-  fekt_label.config(anchor=CENTER)
+  fekt_label.config(anchor=CENTER, background="white")
   fekt_label.pack()
 
 
-  optionLbl = Label(master, text="Zvol moznost", font="Helvetica")
-  optionLbl.config(anchor=CENTER)
+  optionLbl = Label(master, text="Zvoľ možnosť:", font="Helvetica 15 bold")
+  optionLbl.config(anchor=CENTER, background="white")
   optionLbl.pack(pady=5)
 
-  logInBtn = Button(master, text="Log in", font="Helvetica", command=logInScreen)
+  global logInImage
+  logInImage = PhotoImage(file='login.png')
+  logInBtn = Button(master, image=logInImage, command=logInScreen, borderwidth=0)
+  #logInBtn = Button(master, text="Log in", font="Helvetica", command=logInScreen)
+  logInBtn.config(background="white")
   logInBtn.pack(pady=5)
   
   global signUpImage
-  signUpImage = PhotoImage(file='signUp.png')
-
+  signUpImage = PhotoImage(file='signup.png')
   signUpBtn = Button(master, image=signUpImage, command=signUpScreen, borderwidth=0)
-  #signUpBtn.configure(background="white")  
+  signUpBtn.configure(background="white")  
   #signUpBtn = Button(master, text="Sign up", font="Helvetica", command=signUpScreen)
   signUpBtn.pack(pady=5)
 
 
 
-  treeViewBtn = Button(master, text="TreeView", font="Helvetica", command=treeView)
-  treeViewBtn.pack(pady=5)
+  #treeViewBtn = Button(master, text="TreeView", font="Helvetica", command=treeView)
+  #treeViewBtn.configure(background="white")
+  #treeViewBtn.pack(pady=5)
 
 def signUpScreen():
   #TOTO DAT DO LOGINSCREEN
