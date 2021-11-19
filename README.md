@@ -24,3 +24,15 @@ pillow --> pip3 install Pillow
 IPython --> pip3 install IPython
 
 pwinput --> pip install pwinput
+
+bcrypt --> pip install bcrypt
+
+AK NEFUNGUJE BCRYPT
+
+python -m venv C:\Users\Michal\Desktop\AKR-GUI\AKR-GUI\venv
+
+Pillow --> pip install Pillow
+
+TREBA NAINŠTALOVAŤ
+
+pip install wheel
