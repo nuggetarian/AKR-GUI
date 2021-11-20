@@ -86,7 +86,7 @@ def signUpScreen():
     firstScreen()
     #TUTO NEJAKE IFKO ČI SA PODARILO
     success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
-    logger.info("Sign up successful")
+    logger.info("User signed up with mail " + mail)
     success.config(anchor=CENTER)
     success.pack(pady = 5)
 
