@@ -27,6 +27,12 @@ pwinput --> pip install pwinput
 
 bcrypt --> pip install bcrypt
 
+pycrypto --> pip install pycrypto
+
+AK NEFUNGUJE PYCRYPTO
+
+go.microsoft.com/fwlink/?LinkId=691126&fixForIE=.exe.
+
 AK NEFUNGUJE BCRYPT
 
 python -m venv C:\Users\Michal\Desktop\AKR-GUI\AKR-GUI\venv
