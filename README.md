@@ -29,7 +29,7 @@ bcrypt --> pip install bcrypt
 
 cryptography --> pip install cryptography
 
-//pycrypto --> pip install pycrypto
+//pycrypto --> pip install pycryptodome
 
 AK NEFUNGUJE PYCRYPTO
 
