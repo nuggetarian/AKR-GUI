@@ -6,6 +6,7 @@ from sqliteoperations import Database
 import os
 import logging
 from PIL import ImageTk, Image
+from email_pokus import sendEmail
 
 absolutepath = os.path.abspath(__file__)
 fileDirectory = os.path.dirname(absolutepath)
@@ -172,6 +173,10 @@ def logInScreen():
       success = Label(master, text="Spravne heslo", font="Helvetica")
       success.config(anchor=CENTER)
       success.pack()
+      global se
+      se = sendEmail()
+      se.send_email(mail)
+      twoFactorPopUp()
     else:
       logger.info("Log in unsuccessful as " + mail)
       popUp()
@@ -190,6 +195,28 @@ def popUp():
   warningLbl.config(anchor=CENTER, background="white")
   warningLbl.pack(pady=5)
 
+def twoFactorPopUp():
+  twoFactor = Toplevel(master)
+  twoFactor.geometry("450x250")
+
+  verificationLbl = Label(twoFactor, text="Zadaj kód z mailu:", font="Helvetica")
+  verificationLbl.config(anchor=CENTER)
+  verificationLbl.pack()
+
+  codeEntry = Entry(twoFactor, width=30)
+  codeEntry.pack()
+
+  def codeVerification():
+    if codeEntry.get() == se.getMessage():
+      print("nice")
+      #PLACEHOLDER
+      treeView()
+    else:
+      warningLbl = Label(twoFactor, text="Nesprávny kód.", font="Helvetica")
+      warningLbl.config(anchor=CENTER)
+      warningLbl.pack()
+
+  okButton = Button(twoFactor, text="Submit", font="Helvetica", command=codeVerification).pack(pady=5)
 
 
 firstScreen()
