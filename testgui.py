@@ -16,13 +16,13 @@ master.iconbitmap(fileDirectory + "\\lock.ico")
 #NIEČO SPRAVIŤ BIELE = xxxx.configure(background="white")
 
 def firstScreen():
-  master.geometry("250x250")
-  master.configure(background="white")  
+  master.geometry("500x500")
+  master.configure(background="white")
   for widget in master.winfo_children():
     widget.destroy()
-  
+
   fekt_img = Image.open('fekt.png')
-  fekt_img = fekt_img.resize((228,74), Image.ANTIALIAS)
+  fekt_img = fekt_img.resize((342,111), Image.ANTIALIAS)
   fekt_img = ImageTk.PhotoImage(fekt_img)
   fekt_label = ttk.Label(image=fekt_img)
   fekt_label.image = fekt_img
@@ -30,12 +30,13 @@ def firstScreen():
   fekt_label.pack()
 
 
-  optionLbl = Label(master, text="Zvoľ možnosť:", font="Helvetica 15 bold")
+  """optionLbl = Label(master, text="Zvoľ možnosť:", font="Helvetica 15 bold")
   optionLbl.config(anchor=CENTER, background="white")
-  optionLbl.pack(pady=5)
+  optionLbl.pack(pady=5)"""
 
   global logInImage
   logInImage = PhotoImage(file='login.png')
+  
   logInBtn = Button(master, image=logInImage, command=logInScreen, borderwidth=0)
   #logInBtn = Button(master, text="Log in", font="Helvetica", command=logInScreen)
   logInBtn.config(background="white")
@@ -55,36 +56,35 @@ def firstScreen():
   #treeViewBtn.pack(pady=5)
 
 def signUpScreen():
-  #TOTO DAT DO LOGINSCREEN
-  """pwdb = PwDatabase()
-  pwdb.createTable()"""
+  for widget in master.winfo_children():
+    widget.destroy()
+  master.geometry("500x500")
 
-  top = Toplevel(master)
-  top.geometry("250x150")
-  top.iconbitmap(fileDirectory + "\\lock.ico")
-
-  
-
-  mailLbl = Label(top, text="E-mail:", font="Helvetica")
+  mailLbl = Label(master, text="E-mail:", font="Helvetica")
   mailLbl.config(anchor=CENTER)
   mailLbl.pack()
 
-  mailEntry = Entry(top, width=30)
+  mailEntry = Entry(master, width=30)
   mailEntry.pack()
 
-  passwordLbl = Label(top, text="Password:", font="Helvetica")
+  passwordLbl = Label(master, text="Password:", font="Helvetica")
   passwordLbl.config(anchor=CENTER)
   passwordLbl.pack()
 
-  passwordEntry = Entry(top, show="*", width=30)
+  passwordEntry = Entry(master, show="*", width=30)
   passwordEntry.pack()
 
   def addToDatabase():
     mail = mailEntry.get()
     password = passwordEntry.get()
     db = Database(mail, password)
+    db.createTable()
     db.addValues()
-    top.destroy()
+    firstScreen()
+    #TUTO NEJAKE IFKO ČI SA PODARILO
+    success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
+    success.config(anchor=CENTER)
+    success.pack(pady = 5)
 
   def printDatabase():
     conn = sqlite3.connect('users.db')
@@ -92,8 +92,9 @@ def signUpScreen():
     for row in c.execute('SELECT * FROM users;'):
       print(row)
 
-  submitButton = Button(top, text="Submit", font="Helvetica", command=addToDatabase).pack(pady=5)
-  #funButton = Button(top, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
+  submitButton = Button(master, text="Submit", font="Helvetica", command=addToDatabase).pack(pady=5)
+  funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
+  backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
 
 def treeView():
     treeWindow = Toplevel(master)
@@ -135,18 +136,18 @@ def logInScreen():
 
   for widget in master.winfo_children():
     widget.destroy()
-  master.geometry("250x200")
+  master.geometry("500x500")
 
-  mailLbl = Label(master, text="E-mail:", font="Helvetica")
-  mailLbl.config(anchor=CENTER)
-  mailLbl.pack()
+  mailLbl = Label(master, text="E-mail:", font="Helvetica 14 bold")
+  mailLbl.config(anchor=CENTER, background="white")
+  mailLbl.pack(pady=5)
 
   mailEntry = Entry(master, width=30)
-  mailEntry.pack()
+  mailEntry.pack(pady=5)
 
-  passwordLbl = Label(master, text="Password:", font="Helvetica")
-  passwordLbl.config(anchor=CENTER)
-  passwordLbl.pack()
+  passwordLbl = Label(master, text="Password:", font="Helvetica 14 bold")
+  passwordLbl.config(anchor=CENTER, background="white")
+  passwordLbl.pack(pady=5)
 
   passwordEntry = Entry(master, show="*", width=30)
   passwordEntry.pack()
@@ -160,13 +161,24 @@ def logInScreen():
       success.config(anchor=CENTER)
       success.pack()
     else:
-      failure = Label(master, text="Nespravne heslo", font="Helvetica")
+      popUp()
+      """failure = Label(master, text="Nespravne heslo", font="Helvetica")
       failure.config(anchor=CENTER)
-      failure.pack()
+      failure.pack()"""
 
   submitButton = Button(master, text="Submit", font="Helvetica", command=comparePasswords).pack(pady=5)
   backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
 
+def popUp():
+  popUpWindow = Toplevel(master)
+  popUpWindow.geometry("250x50")
+  popUpWindow.title("Warning")
+  popUpWindow.resizable(False, False)
+  popUpWindow.config(background="white")
+  popUpWindow.iconbitmap(fileDirectory + "\\warning.ico")
+  warningLbl = Label(popUpWindow, text="NESPRÁVNE HESLO", font="Helvetica 10")
+  warningLbl.config(anchor=CENTER, background="white")
+  warningLbl.pack(pady=5)
 
 
 
