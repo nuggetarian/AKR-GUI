@@ -42,13 +42,13 @@ def firstScreen():
   global logInImage
   logInImage = PhotoImage(file=fileDirectory + '\\pictures\\login.png')
   
-  logInBtn = Button(master, image=logInImage, command=logInScreen, borderwidth=0)
+  logInBtn = Button(master, image=logInImage, command=logInScreen, borderwidth=0, cursor="hand2", activebackground="#fff")
   logInBtn.config(background="white")
   logInBtn.pack(pady=5)
   
   global signUpImage
   signUpImage = PhotoImage(file=fileDirectory + '\\pictures\\signup.png')
-  signUpBtn = Button(master, image=signUpImage, command=signUpScreen, borderwidth=0)
+  signUpBtn = Button(master, image=signUpImage, command=signUpScreen, borderwidth=0, cursor="hand2", activebackground="#fff")
   signUpBtn.configure(background="white")  
   signUpBtn.pack(pady=5)
 
@@ -154,14 +154,14 @@ def logInScreen():
   mailLbl.config(anchor=CENTER, background="white")
   mailLbl.pack(pady=5)
 
-  mailEntry = Entry(master, width=30)
+  mailEntry = Entry(master, width=30, font="Helvetica")
   mailEntry.pack(pady=5)
 
   passwordLbl = Label(master, text="Password:", font="Helvetica 14 bold")
   passwordLbl.config(anchor=CENTER, background="white")
   passwordLbl.pack(pady=5)
 
-  passwordEntry = Entry(master, show="*", width=30)
+  passwordEntry = Entry(master, show="*", width=30, font="Helvetica")
   passwordEntry.pack()
 
   def comparePasswords():
@@ -170,9 +170,6 @@ def logInScreen():
     db = Database(mail, password)
     if (db.comparePasswords() == True):
       logger.info("Log in successful as " + mail)
-      success = Label(master, text="Spravne heslo", font="Helvetica")
-      success.config(anchor=CENTER)
-      success.pack()
       global se
       se = sendEmail()
       se.send_email(mail)
@@ -181,8 +178,16 @@ def logInScreen():
       logger.info("Log in unsuccessful as " + mail)
       popUp()
 
-  submitButton = Button(master, text="Submit", font="Helvetica", command=comparePasswords).pack(pady=5)
-  backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
+  global submitImage
+  submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
+
+  submitButton = Button(master, image=submitImage, command=comparePasswords, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
+  #submitButton = Button(master, text="Submit", font="Helvetica", command=comparePasswords).pack(pady=5)
+
+  global backImage
+  backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
+  backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
+  #backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
 
 def popUp():
   popUpWindow = Toplevel(master)
