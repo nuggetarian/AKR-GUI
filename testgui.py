@@ -82,13 +82,19 @@ def signUpScreen():
     password = passwordEntry.get()
     db = Database(mail, password)
     db.createTable()
-    db.addValues()
-    firstScreen()
-    #TUTO NEJAKE IFKO ČI SA PODARILO
-    success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
-    logger.info("User signed up with mail " + mail)
-    success.config(anchor=CENTER)
-    success.pack(pady = 5)
+    try:
+      db.addValues()
+      firstScreen()
+      success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
+      logger.info("User signed up with mail " + mail)
+      success.config(anchor=CENTER)
+      success.pack(pady = 5)
+    except sqlite3.IntegrityError:
+      logger.info("Unsuccessful sign up with mail " + mail)
+      warningLabel = Label(master, text="E-mail sa už používa.", font="Helvetica", background="white")
+      warningLabel.config(anchor=CENTER)
+      warningLabel.pack(pady=5)
+ 
 
   def printDatabase():
     conn = sqlite3.connect('users.db')
