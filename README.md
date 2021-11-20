@@ -27,11 +27,13 @@ pwinput --> pip install pwinput
 
 bcrypt --> pip install bcrypt
 
-pycrypto --> pip install pycrypto
+cryptography --> pip install cryptography
+
+//pycrypto --> pip install pycrypto
 
 AK NEFUNGUJE PYCRYPTO
 
-https://visualstudio.microsoft.com/downloads/#other
+BLBOSŤ https://visualstudio.microsoft.com/downloads/#other
 
 AK NEFUNGUJE BCRYPT
 
