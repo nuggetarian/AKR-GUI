@@ -27,6 +27,14 @@ pwinput --> pip install pwinput
 
 bcrypt --> pip install bcrypt
 
+cryptography --> pip install cryptography
+
+//pycrypto --> pip install pycryptodome
+
+AK NEFUNGUJE PYCRYPTO
+
+BLBOSŤ https://visualstudio.microsoft.com/downloads/#other
+
 AK NEFUNGUJE BCRYPT
 
 python -m venv C:\Users\Michal\Desktop\AKR-GUI\AKR-GUI\venv
