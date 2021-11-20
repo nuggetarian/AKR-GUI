@@ -31,7 +31,7 @@ pycrypto --> pip install pycrypto
 
 AK NEFUNGUJE PYCRYPTO
 
-go.microsoft.com/fwlink/?LinkId=691126&fixForIE=.exe.
+https://visualstudio.microsoft.com/downloads/#other
 
 AK NEFUNGUJE BCRYPT
 
