@@ -23,5 +23,10 @@ class PwDatabase:
     conn.commit()    
     conn.close()
   
-
+  def readDatabase(self):
+    conn = sqlite3.connect('vault.db')
+    c = conn.cursor()
+    for row in c.execute('SELECT * FROM vault;'):
+      print(row)
+    conn.close()
     

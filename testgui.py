@@ -115,9 +115,12 @@ def signUpScreen():
   backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
 def treeView():
-    treeWindow = Toplevel(master)
-    treeWindow.geometry("450x250")
-    my_tree = ttk.Treeview(treeWindow)
+    for widget in master.winfo_children():
+      widget.destroy()
+    master.geometry("500x500")
+    """treeWindow = Toplevel(master)
+    treeWindow.geometry("450x250")"""
+    my_tree = ttk.Treeview(master)
 
     my_tree['columns'] = ("Service", "E-mail", "Password")
 
@@ -211,10 +214,6 @@ def twoFactorPopUp():
   for widget in master.winfo_children():
     widget.destroy()
   master.geometry("500x500")
-  """master.config(background="white")"""
-
-  """twoFactor = Toplevel(master)
-  twoFactor.geometry("200x100")"""
 
   verificationLbl = Label(master, text="Zadaj kód z mailu:", font="Helvetica 14 bold", background="white")
   verificationLbl.config(anchor=CENTER)
