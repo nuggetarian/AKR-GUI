@@ -18,8 +18,8 @@ class Database:
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS users (
-                  mail text,
-                  password text
+                  mail TEXT NOT NULL UNIQUE,
+                  password TEXT NOT NULL
                   )""")
     conn.close()
 
