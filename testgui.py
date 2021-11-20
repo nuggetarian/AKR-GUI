@@ -1,6 +1,8 @@
 import sqlite3
 from tkinter import *
 from tkinter import ttk
+from tkinter import font
+from types import CellType
 from pwdatabase import PwDatabase
 from sqliteoperations import Database
 import os
@@ -64,18 +66,18 @@ def signUpScreen():
     widget.destroy()
   master.geometry("500x500")
 
-  mailLbl = Label(master, text="E-mail:", font="Helvetica")
+  mailLbl = Label(master, text="E-mail:", font="Helvetica 14 bold", background="white")
   mailLbl.config(anchor=CENTER)
-  mailLbl.pack()
+  mailLbl.pack(pady=5)
 
-  mailEntry = Entry(master, width=30)
-  mailEntry.pack()
+  mailEntry = Entry(master, width=30, font="Helvetica", borderwidth=2)
+  mailEntry.pack(pady=5)
 
-  passwordLbl = Label(master, text="Password:", font="Helvetica")
+  passwordLbl = Label(master, text="Password:", font="Helvetica 14 bold", background="white")
   passwordLbl.config(anchor=CENTER)
-  passwordLbl.pack()
+  passwordLbl.pack(pady=5)
 
-  passwordEntry = Entry(master, show="*", width=30)
+  passwordEntry = Entry(master, show="*", width=30, font="Helvetica", borderwidth=2)
   passwordEntry.pack()
 
   def addToDatabase():
@@ -95,7 +97,6 @@ def signUpScreen():
       warningLabel = Label(master, text="E-mail sa už používa.", font="Helvetica", background="white")
       warningLabel.config(anchor=CENTER)
       warningLabel.pack(pady=5)
- 
 
   def printDatabase():
     conn = sqlite3.connect('users.db')
@@ -103,9 +104,15 @@ def signUpScreen():
     for row in c.execute('SELECT * FROM users;'):
       print(row)
 
-  submitButton = Button(master, text="Submit", font="Helvetica", command=addToDatabase).pack(pady=5)
-  funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase).pack(pady=5)
-  backButton = Button(master, text="Back", font="Helvetica", command=firstScreen).pack(pady=5)
+  global submitImage
+  submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
+  submitButton = Button(master, image=submitImage, command=addToDatabase, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
+
+  funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase, borderwidth=1).pack(pady=5)
+
+  global backImage
+  backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
+  backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
 def treeView():
     treeWindow = Toplevel(master)
@@ -154,14 +161,14 @@ def logInScreen():
   mailLbl.config(anchor=CENTER, background="white")
   mailLbl.pack(pady=5)
 
-  mailEntry = Entry(master, width=30, font="Helvetica")
+  mailEntry = Entry(master, width=30, font="Helvetica", borderwidth=2)
   mailEntry.pack(pady=5)
 
   passwordLbl = Label(master, text="Password:", font="Helvetica 14 bold")
   passwordLbl.config(anchor=CENTER, background="white")
   passwordLbl.pack(pady=5)
 
-  passwordEntry = Entry(master, show="*", width=30, font="Helvetica")
+  passwordEntry = Entry(master, show="*", width=30, font="Helvetica", borderwidth=2)
   passwordEntry.pack()
 
   def comparePasswords():
@@ -201,28 +208,34 @@ def popUp():
   warningLbl.pack(pady=5)
 
 def twoFactorPopUp():
-  twoFactor = Toplevel(master)
-  twoFactor.geometry("450x250")
+  for widget in master.winfo_children():
+    widget.destroy()
+  master.geometry("500x500")
+  """master.config(background="white")"""
 
-  verificationLbl = Label(twoFactor, text="Zadaj kód z mailu:", font="Helvetica")
+  """twoFactor = Toplevel(master)
+  twoFactor.geometry("200x100")"""
+
+  verificationLbl = Label(master, text="Zadaj kód z mailu:", font="Helvetica 14 bold", background="white")
   verificationLbl.config(anchor=CENTER)
-  verificationLbl.pack()
+  verificationLbl.pack(pady=5)
 
-  codeEntry = Entry(twoFactor, width=30)
-  codeEntry.pack()
+  codeEntry = Entry(master, width=30, font="Helvetica", borderwidth=2)
+  codeEntry.pack(pady=5)
 
   def codeVerification():
     if codeEntry.get() == se.getMessage():
-      print("nice")
       #PLACEHOLDER
       treeView()
     else:
-      warningLbl = Label(twoFactor, text="Nesprávny kód.", font="Helvetica")
+      warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
       warningLbl.config(anchor=CENTER)
       warningLbl.pack()
 
-  okButton = Button(twoFactor, text="Submit", font="Helvetica", command=codeVerification).pack(pady=5)
-
+  global submitImage
+  submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
+  okButton = Button(master, image=submitImage, command=codeVerification, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
+  
 
 firstScreen()
 master.mainloop()
