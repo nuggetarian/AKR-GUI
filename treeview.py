@@ -119,7 +119,7 @@ class treeViewDB():
             clearBoxes()
             conn.close()		
           except:  
-            warningLbl = Label(master, text="Nič nebolo zvolené.", font="Helvetica")
+            warningLbl = Label(master, text="Nič nebolo zvolené.", font="Helvetica", background="white")
             warningLbl.pack(pady=5)
               
       def select_record(e):
@@ -135,37 +135,37 @@ class treeViewDB():
           values = my_tree.item(selected, 'values')
 
           # outputs to entry boxes
-          id_entry.insert(0, values[0])
-          service_entry.insert(0, values[1])
-          username_entry.insert(0, values[2]) 
-          password_entry.insert(0, values[3])
+          try:
+            id_entry.insert(0, values[0])
+            service_entry.insert(0, values[1])
+            username_entry.insert(0, values[2]) 
+            password_entry.insert(0, values[3])
+          except:
+            print("Click.")
 
       # Boxes
-      data_frame = LabelFrame(master, text="Data", background="white")
+      data_frame = LabelFrame(master, text="Data", background="white", font="Helvetica")
       data_frame.pack(fill="x", expand="yes", padx=20)
 
-      id_label = Label(data_frame, text="ID", background="white")
+      id_label = Label(data_frame, text="ID", background="white", font="Helvetica")
       id_label.grid(row=0, column=0, padx=10, pady=10)
       id_entry = Entry(data_frame, borderwidth=2)
       id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-      service_label = Label(data_frame, text="Service", background="white")
+      service_label = Label(data_frame, text="Service", background="white", font="Helvetica")
       service_label.grid(row=0, column=2, padx=10, pady=10)
       service_entry = Entry(data_frame, borderwidth=2)
       service_entry.grid(row=0, column=3, padx=10, pady=10)
 
-      username_label = Label(data_frame, text="Username", background="white")
+      username_label = Label(data_frame, text="Username", background="white", font="Helvetica")
       username_label.grid(row=1, column=0, padx=10, pady=10)
       username_entry = Entry(data_frame, borderwidth=2)
       username_entry.grid(row=1, column=1, padx=10, pady=10)
 
-      password_label = Label(data_frame, text="Password", background="white")
+      password_label = Label(data_frame, text="Password", background="white", font="Helvetica")
       password_label.grid(row=1, column=2, padx=10, pady=10)
       password_entry = Entry(data_frame, borderwidth=2)
       password_entry.grid(row=1, column=3, padx=10, pady=10)
-
-      
-
 
       # Add Buttons
       button_frame = LabelFrame(master, borderwidth=0, background="white")
@@ -182,11 +182,6 @@ class treeViewDB():
 
       remove_one_button = Button(button_frame, image=removeImage, command=removeFromDatabase, cursor="hand2", borderwidth=0, background="white", activebackground="#fff")
       remove_one_button.grid(row=0, column=1 ,padx=10, pady=10)
-
-      global saveEncryptImage
-      saveEncryptImage = PhotoImage(file=fileDirectory + '\\pictures\\saveencrypt.png')
-      save_encrypt_button = Button(master, image=saveEncryptImage, cursor="hand2", borderwidth=0, background="white", activebackground="#fff")
-      save_encrypt_button.pack(pady=5)
 
 
       my_tree.bind("<ButtonRelease-1>", select_record)

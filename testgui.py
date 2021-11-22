@@ -30,6 +30,8 @@ logging.getLogger('PIL').setLevel(logging.WARNING)
 #NIEČO SPRAVIŤ BIELE = xxxx.configure(background="white")
 
 def firstScreen():
+  master.title("Password Manager")
+  master.iconbitmap(fileDirectory + "\\pictures\\lock.ico")
   master.geometry("500x500")
   master.configure(background="white")
   for widget in master.winfo_children():
@@ -117,13 +119,19 @@ def signUpScreen():
   backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
 def treeViewDatabase():
+
   for widget in master.winfo_children():
     widget.destroy()
-  master.geometry("500x500")
-  
+  master.geometry("550x600")
+  master.title("Vault")
+  master.iconbitmap(fileDirectory + "\\pictures\\unlocked_lock.ico")
+
   tree = treeViewDB()
   tree.viewFromDatabase(master)
-
+  global saveEncryptImage
+  saveEncryptImage = PhotoImage(file=fileDirectory + '\\pictures\\saveencrypt.png')
+  save_encrypt_button = Button(master, image=saveEncryptImage, cursor="hand2", borderwidth=0, background="white", activebackground="#fff", command=firstScreen)
+  save_encrypt_button.pack(pady=5)
 
 def treeView():
     # Add Some Style
@@ -435,44 +443,3 @@ def cryptChoice():
 
 firstScreen()
 master.mainloop()
-
-
-
-
-
-
-"""
-for widget in master.winfo_children():
-      widget.destroy()
-    master.geometry("500x500")
-    my_tree = ttk.Treeview(master)
-
-    my_tree['columns'] = ("Service", "E-mail", "Password")
-
-    my_tree.column("#0", width=0, stretch=NO)
-    my_tree.column("Service", anchor=W, width=120, minwidth=20)
-    my_tree.column("E-mail", anchor=W, width=120, minwidth=20)
-    my_tree.column("Password", anchor=W, width=120, minwidth=20)
-
-    my_tree.heading("#0", text="", anchor=W)
-    my_tree.heading("Service", text="Service", anchor=W)
-    my_tree.heading("E-mail", text="E-mail", anchor=W)
-    my_tree.heading("Password", text="Password", anchor=W)
-
-    my_tree.insert(parent='', index='end', iid=0, text="", values=("Facebook", "kontrafakt@gmail.com", "bozknarozlucku"))
-    my_tree.insert(parent='', index='end', iid=1, text="", values=("YouTube", "kontrafakt@gmail.com", "ego"))
-    my_tree.insert(parent='', index='end', iid=2, text="", values=("Github", "kontrafakt@gmail.com", "anys"))
-
-    data=[
-      ["Facebook", "kontrafakt@gmail.com", "bozknarozlucku"],
-      ["YouTube", "kontrafakt@gmail.com", "ego"],
-      ["Github", "kontrafakt@gmail.com", "anys"]
-    ]
-    count=0
-    for record in data:
-      my_tree.insert(parent='', index='end', iid=count, text="", values=(record[0], record[1], record[2]))
-      count += 1
-    
-
-    my_tree.pack(pady=20)
-"""
