@@ -27,8 +27,6 @@ logger=logging.getLogger()
 logger.setLevel(logging.DEBUG)
 logging.getLogger('PIL').setLevel(logging.WARNING)
 
-#NIEČO SPRAVIŤ BIELE = xxxx.configure(background="white")
-
 def firstScreen():
   master.title("Password Manager")
   master.iconbitmap(fileDirectory + "\\pictures\\lock.ico")
@@ -123,6 +121,7 @@ def treeViewDatabase():
     widget.destroy()
   master.geometry("550x600")
   master.title("Vault")
+  master.resizable(False, True)
   master.iconbitmap(fileDirectory + "\\pictures\\unlocked_lock.ico")
 
   tree = treeViewDB()
