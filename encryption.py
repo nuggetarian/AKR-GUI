@@ -11,7 +11,7 @@ pwdb.addValues("Twitter", "kontrafakt@gmail.com", "bruh123")
 pwdb.addValues("YouTube", "kontrafakt@gmail.com", "haha134")"""
 
 # DISPLAY FILE
-#pwdb.readDatabase()
+pwdb.readDatabase()
 
 # ENCRYPT DATABASE
 """def padText(file):
@@ -50,7 +50,7 @@ with open('vault.db', 'wb') as e:
 
 
 # DISPLAY FILE
-pwdb.readDatabase()
+"""pwdb.readDatabase()"""
 
 
 """def padText(plain_text):
