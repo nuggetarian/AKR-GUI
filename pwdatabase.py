@@ -6,8 +6,8 @@ class PwDatabase:
   password = ""
   service = ""
 
-  def createTable(self):
-    conn = sqlite3.connect('vault.db')
+  def createTable(self, filename):
+    conn = sqlite3.connect(filename + '.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS vault (
                   id integer not null primary key,

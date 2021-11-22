@@ -8,7 +8,7 @@ import os
 from pwdatabase import PwDatabase
 
 class treeViewDB():
-    def viewFromDatabase(self, master):
+    def viewFromDatabase(self, master, filename):
 
       absolutepath = os.path.abspath(__file__)
       fileDirectory = os.path.dirname(absolutepath) 
@@ -69,7 +69,7 @@ class treeViewDB():
 
       # Functions
       def addToDatabase():
-          conn = sqlite3.connect('vault.db')
+          conn = sqlite3.connect(filename + '.db')
           c = conn.cursor()
           c.execute("INSERT INTO vault VALUES (:id, :service, :username, :password)",
                     {
@@ -86,7 +86,7 @@ class treeViewDB():
           readDatabase()
 
       def readDatabase():
-          conn = sqlite3.connect('vault.db')
+          conn = sqlite3.connect(filename + '.db')
           c = conn.cursor()
           c.execute("SELECT * FROM vault")
           records = c.fetchall()
@@ -111,7 +111,7 @@ class treeViewDB():
           try:
             x = my_tree.selection()[0]
             my_tree.delete(x)
-            conn = sqlite3.connect('vault.db')
+            conn = sqlite3.connect(filename + '.db')
             c = conn.cursor()
             c.execute("DELETE FROM vault WHERE oid=" + id_entry.get())
             conn.commit()
@@ -186,6 +186,4 @@ class treeViewDB():
 
       my_tree.bind("<ButtonRelease-1>", select_record)
 
-      pwdb = PwDatabase()
-      pwdb.createTable()
       readDatabase()

@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import font
 from types import CellType
 from pwdatabase import PwDatabase
-from sqliteoperations import Database
+from userdatabase import Database
 import os
 import logging
 from PIL import ImageTk, Image
@@ -82,20 +82,31 @@ def signUpScreen():
   passwordEntry = Entry(master, show="*", width=30, font="Helvetica", borderwidth=2)
   passwordEntry.pack()
 
+  filenameLbl = Label(master, text="Filename:", font="Helvetica 14 bold", background="white")
+  filenameLbl.config(anchor=CENTER)
+  filenameLbl.pack(pady=5)
+
+  filenameEntry = Entry(master, width=30, font="Helvetica", borderwidth=2)
+  filenameEntry.pack()
+
   def addToDatabase():
-    mail = mailEntry.get()
+    signUpMail = mailEntry.get()
     password = passwordEntry.get()
-    db = Database(mail, password)
+    filename = filenameEntry.get()
+
+    db = Database(signUpMail, password)
     db.createTable()
+    pwdb = PwDatabase()
     try:
-      db.addValues()
+      db.addValues(filename)
+      pwdb.createTable(filename)
       firstScreen()
       success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
-      logger.info("User signed up with mail " + mail)
+      logger.info("User signed up with mail " + signUpMail)
       success.config(anchor=CENTER)
       success.pack(pady = 5)
     except sqlite3.IntegrityError:
-      logger.info("Unsuccessful sign up with mail " + mail)
+      logger.info("Unsuccessful sign up with mail " + signUpMail)
       warningLabel = Label(master, text="E-mail sa už používa.", font="Helvetica", background="white")
       warningLabel.config(anchor=CENTER)
       warningLabel.pack(pady=5)
@@ -116,7 +127,7 @@ def signUpScreen():
   backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
   backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
-def treeViewDatabase():
+def treeViewDatabase(filename):
   for widget in master.winfo_children():
     widget.destroy()
   master.geometry("550x600")
@@ -125,7 +136,7 @@ def treeViewDatabase():
   master.iconbitmap(fileDirectory + "\\pictures\\unlocked_lock.ico")
 
   tree = treeViewDB()
-  tree.viewFromDatabase(master)
+  tree.viewFromDatabase(master, filename)
   global saveEncryptImage
   saveEncryptImage = PhotoImage(file=fileDirectory + '\\pictures\\saveencrypt.png')
   save_encrypt_button = Button(master, image=saveEncryptImage, cursor="hand2", borderwidth=0, background="white", activebackground="#fff", command=firstScreen)
@@ -133,8 +144,6 @@ def treeViewDatabase():
 
 def logInScreen():
   logger.info("Log in chosen")
-  pwdb = PwDatabase()
-  pwdb.createTable()
 
   for widget in master.winfo_children():
     widget.destroy()
@@ -155,8 +164,10 @@ def logInScreen():
   passwordEntry.pack()
 
   def comparePasswords():
+    global mail
     mail = mailEntry.get()
     password = passwordEntry.get()
+    global db
     db = Database(mail, password)
     if (db.comparePasswords() == True):
       logger.info("Log in successful as " + mail)
@@ -204,8 +215,7 @@ def twoFactorPopUp():
 
   def codeVerification():
     if codeEntry.get() == se.getMessage():
-      #PLACEHOLDER
-      treeViewDatabase()
+      treeViewDatabase(db.findFile(mail))
     else:
       warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
       warningLbl.config(anchor=CENTER)
