@@ -163,7 +163,7 @@ def treeViewDatabase(filename):
       e.aes128Encrypt(db.findFile(mail), password)
       master.quit()
     elif db.findEncryption(mail) == 'aes256':
-      e.aes256Encrypt(db.findFile(mail, password))
+      e.aes256Encrypt(db.findFile(mail), password)
       master.quit()
 
   tree = treeViewDB()
@@ -247,8 +247,6 @@ def twoFactorPopUp():
 
   def codeVerification():
     if codeEntry.get() == se.getMessage():
-      print(db.findFile(mail))
-      print(db.findEncryption(mail))
       e = Encryption()
       if db.findEncryption(mail) == 'des':
         e.threeDesDecrypt(db.findFile(mail), password)
@@ -260,7 +258,7 @@ def twoFactorPopUp():
         e.aes128Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
       elif db.findEncryption(mail) == 'aes256':
-        e.aes256Decrypt(db.findFile(mail, password))
+        e.aes256Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
     else:
       warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
