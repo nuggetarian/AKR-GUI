@@ -9,6 +9,7 @@ from PIL import ImageTk, Image
 from email_pokus import sendEmail
 from Crypto.Cipher import AES
 from treeview import treeViewDB
+from encryption import Encryption
 
 absolutepath = os.path.abspath(__file__)
 fileDirectory = os.path.dirname(absolutepath)
@@ -87,22 +88,29 @@ def signUpScreen():
   filenameEntry = Entry(master, width=30, font="Helvetica", borderwidth=2)
   filenameEntry.pack()
 
-  def addToDatabase():
+  def addToDatabase(encryption):
     signUpMail = mailEntry.get()
-    password = passwordEntry.get()
-    filename = filenameEntry.get()
-
-    db = Database(signUpMail, password)
+    signUpPassword = passwordEntry.get()
+    signUpFilename = filenameEntry.get()
+    db = Database(signUpMail, signUpPassword)
     db.createTable()
     pwdb = PwDatabase()
     try:
-      db.addValues(filename)
-      pwdb.createTable(filename)
+      db.addValues(signUpFilename, encryption)
+      pwdb.createTable(signUpFilename)
       firstScreen()
       success = Label(master, text="Registrácia prebehla úspešne.", font="Helvetica", background="white")
       logger.info("User signed up with mail " + signUpMail)
       success.config(anchor=CENTER)
       success.pack(pady = 5)
+      if encryption == "des":
+        e.threeDesEncrypt(signUpFilename, signUpPassword)
+      elif encryption == "chacha":
+        e.chaChaEncrypt(signUpFilename, signUpPassword)
+      elif encryption == "aes128":
+        e.aes128Encrypt(signUpFilename, signUpPassword)
+      elif encryption == "aes256":
+        e.aes256Encrypt(signUpFilename, signUpPassword)
     except sqlite3.IntegrityError:
       logger.info("Unsuccessful sign up with mail " + signUpMail)
       warningLabel = Label(master, text="E-mail sa už používa.", font="Helvetica", background="white")
@@ -115,9 +123,19 @@ def signUpScreen():
     for row in c.execute('SELECT * FROM users;'):
       print(row)
 
-  global submitImage
+  chooseEncryptionLbl = Label(text="Zvoľ šifrovací algoritmus a dĺžku \nkľúča na ukončenie registrácie:", font="Helvetica 12", background="white")
+  chooseEncryptionLbl.config(anchor=CENTER)
+  chooseEncryptionLbl.pack(pady=5)
+
+  e = Encryption()
+  desButton = Button(text="3DES", command=lambda: addToDatabase("des")).pack(pady=5)
+  chaChaButton = Button(text="CaCha20", command=lambda: addToDatabase("chacha")).pack(pady=5)
+  aes128Button = Button(text="AES 128bit", command=lambda: addToDatabase("aes128")).pack(pady=5)
+  aes256Button = Button(text="AES 256bit", command=lambda: addToDatabase("aes256")).pack(pady=5)
+
+  """global submitImage
   submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
-  submitButton = Button(master, image=submitImage, command=addToDatabase, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
+  submitButton = Button(master, image=submitImage, command=lambda: addToDatabase("des"), borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)"""
 
   funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase, borderwidth=1).pack(pady=5)
 

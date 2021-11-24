@@ -20,14 +20,15 @@ class Database:
     c.execute("""CREATE TABLE IF NOT EXISTS users (
                   mail TEXT NOT NULL UNIQUE,
                   password TEXT NOT NULL,
-                  filename TEXT NOT NULL
+                  filename TEXT NOT NULL,
+                  encryption TEXT NOT NULL
                   )""")
     conn.close()
 
-  def addValues(self, filename):
+  def addValues(self, filename, encryption):
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
-    c.execute("""INSERT INTO users ('mail', 'password', 'filename') VALUES (?, ?, ?);""", (self.mail, self.hashed, filename))
+    c.execute("""INSERT INTO users ('mail', 'password', 'filename', 'encryption') VALUES (?, ?, ?, ?);""", (self.mail, self.hashed, filename, encryption))
     conn.commit()    
     conn.close()
   

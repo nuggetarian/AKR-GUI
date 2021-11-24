@@ -7,7 +7,7 @@ from pwdatabase import PwDatabase
 
 class Encryption:
 
-  def threeDesEncrypt(filename, password):
+  def threeDesEncrypt(self, filename, password):
     # Precitanie suboru
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
@@ -21,7 +21,6 @@ class Encryption:
             return key
     # Generování klíče
     key_hash = md5(keyGen(password).encode('utf8')).digest()
-    print(len(keyGen(password).encode('utf-8')))
     
     tdes_key = DES3.adjust_key_parity(key_hash)
     cipher = DES3.new(tdes_key, DES3.MODE_EAX, nonce=b'0') 
@@ -30,7 +29,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
 
-  def threeDesDecrypt(filename, password):
+  def threeDesDecrypt(self, filename, password):
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
 
@@ -47,7 +46,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
             
-  def chaChaEncrypt(filename, password):
+  def chaChaEncrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
@@ -73,7 +72,7 @@ class Encryption:
     output.close()
     nonc.close()
 
-  def chaChaDecrypt(filename, password):
+  def chaChaDecrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
@@ -104,7 +103,7 @@ class Encryption:
     except ValueError or KeyError:
       print("Incorrect decryption")
 
-  def aes128Encrypt(filename, password):
+  def aes128Encrypt(self, filename, password):
 
     def keyGen(key):
       while len(key) % 16 != 0:
@@ -122,7 +121,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
-  def aes128Decrypt(filename, password):
+  def aes128Decrypt(self, filename, password):
 
     def keyGen(key):
       while len(key) % 16 != 0:
@@ -140,7 +139,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
-  def aes256Encrypt(filename, password):
+  def aes256Encrypt(self, filename, password):
 
     def keyGen(key):
       while len(key) % 32 != 0:
@@ -158,7 +157,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
-  def aes256Decrypt(filename, password):
+  def aes256Decrypt(self, filename, password):
 
     def keyGen(key):
       while len(key) % 32 != 0:
