@@ -17,8 +17,6 @@ heslo: 8^Tfj3@RGL
 
 bcrypt --> pip install bcrypt
 
-cryptography --> pip install cryptography
-
 pycrypto --> pip install pycryptodome
 
 AK NEFUNGUJE BCRYPT
