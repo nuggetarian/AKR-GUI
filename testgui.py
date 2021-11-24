@@ -151,11 +151,26 @@ def treeViewDatabase(filename):
   master.resizable(False, True)
   master.iconbitmap(fileDirectory + "\\pictures\\unlocked_lock.ico")
 
+  def saveAndEncrypt():
+    e = Encryption()
+    if db.findEncryption(mail) == 'des':
+      e.threeDesEncrypt(db.findFile(mail), password)
+      master.quit()
+    elif db.findEncryption(mail) == 'chacha':
+      e.chaChaEncrypt(db.findFile(mail), password)
+      master.quit()
+    elif db.findEncryption(mail) == 'aes128':
+      e.aes128Encrypt(db.findFile(mail), password)
+      master.quit()
+    elif db.findEncryption(mail) == 'aes256':
+      e.aes256Encrypt(db.findFile(mail, password))
+      master.quit()
+
   tree = treeViewDB()
   tree.viewFromDatabase(master, filename)
   global saveEncryptImage
   saveEncryptImage = PhotoImage(file=fileDirectory + '\\pictures\\saveencrypt.png')
-  save_encrypt_button = Button(master, image=saveEncryptImage, cursor="hand2", borderwidth=0, background="white", activebackground="#fff", command=firstScreen)
+  save_encrypt_button = Button(master, command=saveAndEncrypt, image=saveEncryptImage, cursor="hand2", borderwidth=0, background="white", activebackground="#fff")
   save_encrypt_button.pack(pady=5)
 
 def logInScreen():
