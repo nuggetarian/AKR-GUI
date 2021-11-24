@@ -127,15 +127,13 @@ def signUpScreen():
   chooseEncryptionLbl.config(anchor=CENTER)
   chooseEncryptionLbl.pack(pady=5)
 
+  buttonGrid = LabelFrame(master, borderwidth=0, background="white")
+  buttonGrid.pack()
   e = Encryption()
-  desButton = Button(text="3DES", command=lambda: addToDatabase("des")).pack(pady=5)
-  chaChaButton = Button(text="CaCha20", command=lambda: addToDatabase("chacha")).pack(pady=5)
-  aes128Button = Button(text="AES 128bit", command=lambda: addToDatabase("aes128")).pack(pady=5)
-  aes256Button = Button(text="AES 256bit", command=lambda: addToDatabase("aes256")).pack(pady=5)
-
-  """global submitImage
-  submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
-  submitButton = Button(master, image=submitImage, command=lambda: addToDatabase("des"), borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)"""
+  desButton = Button(buttonGrid, text="3DES", command=lambda: addToDatabase("des")).grid(row=0, column=0, padx=10, pady=10)
+  chaChaButton = Button(buttonGrid, text="CaCha20", command=lambda: addToDatabase("chacha")).grid(row=0, column=1, padx=10, pady=10)
+  aes128Button = Button(buttonGrid, text="AES 128bit", command=lambda: addToDatabase("aes128")).grid(row=0, column=2, padx=10, pady=10)
+  aes256Button = Button(buttonGrid, text="AES 256bit", command=lambda: addToDatabase("aes256")).grid(row=1, column=2, padx=10, pady=10)
 
   funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase, borderwidth=1).pack(pady=5)
 
