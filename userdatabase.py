@@ -53,4 +53,13 @@ class Database:
     conn.close()
     return result
 
+  def findEncryption(self, mail):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute("SELECT encryption FROM users WHERE mail=:mail", {'mail': mail})
+    hashed = c.fetchall()
+    result = hashed[0][0]
+    conn.close()
+    return result
+
     

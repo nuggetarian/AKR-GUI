@@ -182,6 +182,7 @@ def logInScreen():
   def comparePasswords():
     global mail
     mail = mailEntry.get()
+    global password
     password = passwordEntry.get()
     global db
     db = Database(mail, password)
@@ -231,7 +232,21 @@ def twoFactorPopUp():
 
   def codeVerification():
     if codeEntry.get() == se.getMessage():
-      treeViewDatabase(db.findFile(mail))
+      print(db.findFile(mail))
+      print(db.findEncryption(mail))
+      e = Encryption()
+      if db.findEncryption(mail) == 'des':
+        e.threeDesDecrypt(db.findFile(mail), password)
+        treeViewDatabase(db.findFile(mail))
+      elif db.findEncryption(mail) == 'chacha':
+        e.chaChaDecrypt(db.findFile(mail), password)
+        treeViewDatabase(db.findFile(mail))
+      elif db.findEncryption(mail) == 'aes128':
+        e.aes128Decrypt(db.findFile(mail), password)
+        treeViewDatabase(db.findFile(mail))
+      elif db.findEncryption(mail) == 'aes256':
+        e.aes256Decrypt(db.findFile(mail, password))
+        treeViewDatabase(db.findFile(mail))
     else:
       warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
       warningLbl.config(anchor=CENTER)
