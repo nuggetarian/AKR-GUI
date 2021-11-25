@@ -103,8 +103,10 @@ def signUpScreen():
       logger.info("User signed up with mail " + signUpMail)
       success.config(anchor=CENTER)
       success.pack(pady = 5)
-      if encryption == "des":
-        e.threeDesEncrypt(signUpFilename, signUpPassword)
+      if encryption == "des168":
+        e.threeDes168Encrypt(signUpFilename, signUpPassword)
+      elif encryption == "des112":
+        e.threeDes112Encrypt(signUpFilename, signUpPassword)
       elif encryption == "chacha":
         e.chaChaEncrypt(signUpFilename, signUpPassword)
       elif encryption == "aes128":
@@ -130,7 +132,9 @@ def signUpScreen():
   buttonGrid = LabelFrame(master, borderwidth=0, background="white")
   buttonGrid.pack()
   e = Encryption()
-  desButton = Button(buttonGrid, text="3DES", command=lambda: addToDatabase("des")).grid(row=0, column=0, padx=10, pady=10)
+
+  des112Button = Button(buttonGrid, text="3DES 112bit", command=lambda: addToDatabase("des112")).grid(row=0, column=0, padx=10, pady=10)
+  des168Button = Button(buttonGrid, text="3DES 168bit", command=lambda: addToDatabase("des168")).grid(row=1, column=0, padx=10, pady=10)
   chaChaButton = Button(buttonGrid, text="CaCha20", command=lambda: addToDatabase("chacha")).grid(row=0, column=1, padx=10, pady=10)
   aes128Button = Button(buttonGrid, text="AES 128bit", command=lambda: addToDatabase("aes128")).grid(row=0, column=2, padx=10, pady=10)
   aes256Button = Button(buttonGrid, text="AES 256bit", command=lambda: addToDatabase("aes256")).grid(row=1, column=2, padx=10, pady=10)
@@ -151,8 +155,11 @@ def treeViewDatabase(filename):
 
   def saveAndEncrypt():
     e = Encryption()
-    if db.findEncryption(mail) == 'des':
-      e.threeDesEncrypt(db.findFile(mail), password)
+    if db.findEncryption(mail) == 'des168':
+      e.threeDes168Encrypt(db.findFile(mail), password)
+      master.quit()
+    elif db.findEncryption(mail) == 'des112':
+      e.threeDes112Encrypt(db.findFile(mail), password)
       master.quit()
     elif db.findEncryption(mail) == 'chacha':
       e.chaChaEncrypt(db.findFile(mail), password)
@@ -246,8 +253,11 @@ def twoFactorPopUp():
   def codeVerification():
     if codeEntry.get() == se.getMessage():
       e = Encryption()
-      if db.findEncryption(mail) == 'des':
-        e.threeDesDecrypt(db.findFile(mail), password)
+      if db.findEncryption(mail) == 'des168':
+        e.threeDes168Decrypt(db.findFile(mail), password)
+        treeViewDatabase(db.findFile(mail))
+      elif db.findEncryption(mail) == 'des112':
+        e.threeDes112Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
       elif db.findEncryption(mail) == 'chacha':
         e.chaChaDecrypt(db.findFile(mail), password)

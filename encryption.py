@@ -7,7 +7,7 @@ from pwdatabase import PwDatabase
 
 class Encryption:
 
-  def threeDesEncrypt(self, filename, password):
+  def threeDes168Encrypt(self, filename, password):
     # Precitanie suboru
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
@@ -29,7 +29,7 @@ class Encryption:
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
 
-  def threeDesDecrypt(self, filename, password):
+  def threeDes168Decrypt(self, filename, password):
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
 
@@ -45,7 +45,46 @@ class Encryption:
     new_file_bytes = cipher.decrypt(file_bytes)
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
+
+  def threeDes112Encrypt(self, filename , password):
+     # Precitanie suboru
+    with open(filename + '.db', 'rb') as input_file:
+      file_bytes = input_file.read()
+    # Sifrovanie
+    password.encode('utf8')
+
+
+    def keyGen(key):
+            while len(key) % 14 != 0:
+                key = key + '0'
+            return key
+    # Generování klíče
+    key_hash = md5(keyGen(password).encode('utf8')).digest()
+    
+    tdes_key = DES3.adjust_key_parity(key_hash)
+    cipher = DES3.new(tdes_key, DES3.MODE_EAX, nonce=b'0') 
+    new_file_bytes = cipher.encrypt(file_bytes)
+    # Zapis zasifrovaneho obsahu do suboru
+    with open(filename + '.db', 'wb') as output:
+      output.write(new_file_bytes)  
             
+  def threeDes112Decrypt(self, filename, password):
+    with open(filename + '.db', 'rb') as input_file:
+      file_bytes = input_file.read()
+
+    def keyGen(key):
+            while len(key) % 14 != 0:
+                key = key + '0'
+            return key
+    # Generování klíče
+    key_hash = md5(keyGen(password).encode('utf8')).digest()
+    tdes_key = DES3.adjust_key_parity(key_hash)
+    cipher = DES3.new(tdes_key, DES3.MODE_EAX, nonce=b'0')  
+    
+    new_file_bytes = cipher.decrypt(file_bytes)
+    with open(filename + '.db', 'wb') as output:
+      output.write(new_file_bytes)
+
   def chaChaEncrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 32 != 0:
