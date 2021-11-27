@@ -107,8 +107,10 @@ def signUpScreen():
         e.threeDes168Encrypt(signUpFilename, signUpPassword)
       elif encryption == "des112":
         e.threeDes112Encrypt(signUpFilename, signUpPassword)
-      elif encryption == "chacha":
-        e.chaChaEncrypt(signUpFilename, signUpPassword)
+      elif encryption == "chacha128":
+        e.chaCha128Encrypt(signUpFilename, signUpPassword)
+      elif encryption == "chacha256":
+        e.chaCha256Encrypt(signUpFilename, signUpPassword)
       elif encryption == "aes128":
         e.aes128Encrypt(signUpFilename, signUpPassword)
       elif encryption == "aes256":
@@ -133,11 +135,25 @@ def signUpScreen():
   buttonGrid.pack()
   e = Encryption()
 
-  des112Button = Button(buttonGrid, text="3DES 112bit", command=lambda: addToDatabase("des112")).grid(row=0, column=0, padx=10, pady=10)
-  des168Button = Button(buttonGrid, text="3DES 168bit", command=lambda: addToDatabase("des168")).grid(row=1, column=0, padx=10, pady=10)
-  chaChaButton = Button(buttonGrid, text="CaCha20", command=lambda: addToDatabase("chacha")).grid(row=0, column=1, padx=10, pady=10)
-  aes128Button = Button(buttonGrid, text="AES 128bit", command=lambda: addToDatabase("aes128")).grid(row=0, column=2, padx=10, pady=10)
-  aes256Button = Button(buttonGrid, text="AES 256bit", command=lambda: addToDatabase("aes256")).grid(row=1, column=2, padx=10, pady=10)
+  global des112Image
+  global des168Image
+  global aes128Image
+  global aes256Image
+  global chacha128Image
+  global chacha256Image
+  des112Image = PhotoImage(file=fileDirectory + '\\pictures\\3des112-1.png')
+  des168Image = PhotoImage(file=fileDirectory + '\\pictures\\3des168-1.png')
+  aes128Image = PhotoImage(file=fileDirectory + '\\pictures\\aes128-1.png')
+  aes256Image = PhotoImage(file=fileDirectory + '\\pictures\\aes256-1.png')
+  chacha128Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha128.png')
+  chacha256Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha256.png')
+
+  des112Button = Button(buttonGrid, image=des112Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des112")).grid(row=0, column=0, padx=10, pady=10)
+  des168Button = Button(buttonGrid, image=des168Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des168")).grid(row=1, column=0, padx=10, pady=10)
+  chaCha128Button = Button(buttonGrid, image=chacha128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha128")).grid(row=0, column=1, padx=10, pady=10)
+  chaCha256Button = Button(buttonGrid, image=chacha256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha256")).grid(row=1, column=1, padx=10, pady=10)
+  aes128Button = Button(buttonGrid, image=aes128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes128")).grid(row=0, column=2, padx=10, pady=10)
+  aes256Button = Button(buttonGrid, image=aes256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes256")).grid(row=1, column=2, padx=10, pady=10)
 
   funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase, borderwidth=1).pack(pady=5)
 
@@ -161,8 +177,11 @@ def treeViewDatabase(filename):
     elif db.findEncryption(mail) == 'des112':
       e.threeDes112Encrypt(db.findFile(mail), password)
       master.quit()
-    elif db.findEncryption(mail) == 'chacha':
-      e.chaChaEncrypt(db.findFile(mail), password)
+    elif db.findEncryption(mail) == 'chacha128':
+      e.chaCha128Encrypt(db.findFile(mail), password)
+      master.quit()
+    elif db.findEncryption(mail) == 'chacha256':
+      e.chaCha256Encrypt(db.findFile(mail), password)
       master.quit()
     elif db.findEncryption(mail) == 'aes128':
       e.aes128Encrypt(db.findFile(mail), password)
@@ -259,8 +278,11 @@ def twoFactorPopUp():
       elif db.findEncryption(mail) == 'des112':
         e.threeDes112Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
-      elif db.findEncryption(mail) == 'chacha':
-        e.chaChaDecrypt(db.findFile(mail), password)
+      elif db.findEncryption(mail) == 'chacha128':
+        e.chaCha128Decrypt(db.findFile(mail), password)
+        treeViewDatabase(db.findFile(mail))
+      elif db.findEncryption(mail) == 'chacha256':
+        e.chaCha256Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
       elif db.findEncryption(mail) == 'aes128':
         e.aes128Decrypt(db.findFile(mail), password)

@@ -85,7 +85,64 @@ class Encryption:
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
 
-  def chaChaEncrypt(self, filename, password):
+  def chaCha128Encrypt(self, filename, password):
+    def keyGen(key):
+            while len(key) % 16 != 0:
+                key = key + b'0'
+            return key
+    # Generování klíče
+    key = keyGen(bytes(password, 'utf-8'))
+
+    # Načtení databáze do proměnné
+    with open(filename + '.db', 'rb') as input_file:
+        file_bytes = input_file.read()
+    input_file.close()
+
+    plaintext = file_bytes
+    cipher = ChaCha20.new(key=key)
+    ciphertext = cipher.encrypt(plaintext)
+    nonce = cipher.nonce
+
+    with open(filename + '.db', 'wb') as output:
+      output.write(ciphertext)
+    with open(filename + '_nonce.txt', 'wb') as nonc:
+      nonc.write(nonce)
+
+    output.close()
+    nonc.close()
+
+  def chaCha128Decrypt(self, filename, password):
+    def keyGen(key):
+            while len(key) % 16 != 0:
+                key = key + b'0'
+            return key
+    # Generování klíče
+    key = keyGen(bytes(password, 'utf-8'))
+
+    # Načtení databáze do proměnné
+    with open(filename + '.db', 'rb') as input_file:
+        file_bytes = input_file.read()
+    input_file.close()
+
+    try:
+      with open(filename + '_nonce.txt', 'rb') as nc:
+        nonce = nc.read()
+      with open(filename + '.db', 'rb')as ciphtext:
+        ciphertext = ciphtext.read()
+
+      cipher = ChaCha20.new(key=key, nonce=nonce)
+      dectext = cipher.decrypt(ciphertext)
+
+      with open(filename + '.db', 'wb') as dec:
+        dec.write(dectext)
+
+      nc.close()
+      ciphtext.close()
+      dec.close()
+    except ValueError or KeyError:
+      print("Incorrect decryption")
+
+  def chaCha256Encrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
@@ -111,7 +168,7 @@ class Encryption:
     output.close()
     nonc.close()
 
-  def chaChaDecrypt(self, filename, password):
+  def chaCha256Decrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
