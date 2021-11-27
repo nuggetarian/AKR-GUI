@@ -55,6 +55,17 @@ def firstScreen():
   signUpBtn.configure(background="white")  
   signUpBtn.pack(pady=5)
 
+  def saveEndExit():
+    file_exists = os.path.exists('users.db')
+    if file_exists == True:
+      e = Encryption()
+      e.aes128Encrypt('users', "aE3xCj83")
+      master.quit()
+    elif file_exists == False:
+      print("File does not exist")
+      master.quit()
+
+  saveAndExitButton = Button(master, text="Save & Exit", cursor="hand2", command=saveEndExit).pack(pady=5)
 
 
   #treeViewBtn = Button(master, text="TreeView", font="Helvetica", command=treeView)
@@ -173,21 +184,27 @@ def treeViewDatabase(filename):
     e = Encryption()
     if db.findEncryption(mail) == 'des168':
       e.threeDes168Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
     elif db.findEncryption(mail) == 'des112':
       e.threeDes112Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
     elif db.findEncryption(mail) == 'chacha128':
       e.chaCha128Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
     elif db.findEncryption(mail) == 'chacha256':
       e.chaCha256Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
     elif db.findEncryption(mail) == 'aes128':
       e.aes128Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
     elif db.findEncryption(mail) == 'aes256':
       e.aes256Encrypt(db.findFile(mail), password)
+      e.aes128Encrypt('users', "aE3xCj83")
       master.quit()
 
   tree = treeViewDB()
@@ -341,6 +358,15 @@ def cryptChoice():
   backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
   backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
+def decryptUsers():
+  file_exists = os.path.exists('users.db')
+  if file_exists == True:
+    print("File exists")
+    e = Encryption()
+    e.aes128Decrypt('users', "aE3xCj83")
+  elif file_exists == False:
+    print("File does not exist")
 
+decryptUsers() 
 firstScreen()
 master.mainloop()
