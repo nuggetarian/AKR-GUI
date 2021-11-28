@@ -1,5 +1,6 @@
 import sqlite3
 import bcrypt
+from checksum import CheckSum
 
 class Database:
 
@@ -21,7 +22,8 @@ class Database:
                   mail TEXT NOT NULL UNIQUE,
                   password TEXT NOT NULL,
                   filename TEXT NOT NULL,
-                  encryption TEXT NOT NULL
+                  encryption TEXT NOT NULL,
+                  checksum TEXT
                   )""")
     conn.close()
 
@@ -61,5 +63,23 @@ class Database:
     result = hashed[0][0]
     conn.close()
     return result
+
+  def findChecksum(self, filename):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute("SELECT checksum FROM users WHERE filename=:filename", {'filename': filename})
+    hashed = c.fetchall()
+    result = hashed[0][0]
+    conn.close()
+    return result
+
+  def addChecksumValues(self, filename):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    checksum = CheckSum()
+    c.execute("""UPDATE users SET checksum=? WHERE filename=?;""", (checksum.get_checksum(filename), filename))
+    conn.commit()    
+    conn.close()
+
 
     

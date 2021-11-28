@@ -10,6 +10,7 @@ from email_pokus import sendEmail
 from Crypto.Cipher import AES
 from treeview import treeViewDB
 from encryption import Encryption
+from checksum import CheckSum
 
 absolutepath = os.path.abspath(__file__)
 fileDirectory = os.path.dirname(absolutepath)
@@ -182,6 +183,7 @@ def treeViewDatabase(filename):
 
   def saveAndEncrypt():
     e = Encryption()
+    db.addChecksumValues(db.findFile(mail))
     if db.findEncryption(mail) == 'des168':
       e.threeDes168Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
@@ -292,21 +294,27 @@ def twoFactorPopUp():
       if db.findEncryption(mail) == 'des168':
         e.threeDes168Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
       elif db.findEncryption(mail) == 'des112':
         e.threeDes112Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
       elif db.findEncryption(mail) == 'chacha128':
         e.chaCha128Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
       elif db.findEncryption(mail) == 'chacha256':
         e.chaCha256Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
       elif db.findEncryption(mail) == 'aes128':
         e.aes128Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
       elif db.findEncryption(mail) == 'aes256':
         e.aes256Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
+        popUpChecksum()
     else:
       warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
       warningLbl.config(anchor=CENTER)
@@ -315,48 +323,6 @@ def twoFactorPopUp():
   global submitImage
   submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
   okButton = Button(master, image=submitImage, command=codeVerification, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
-  
-def cryptChoice():
-  for widget in master.winfo_children():
-    widget.destroy()
-  master.geometry("500x500")
-
-  vault = PwDatabase()
-  def printDatabase():
-    conn = sqlite3.connect('vault.db')
-    c = conn.cursor()
-    for row in c.execute('SELECT * FROM vault;'):
-      print(row)
-    conn.close()
-
-  def encrypt():
-    def padText(file):
-      while len(file)%16 != 0:
-        file = file + b'0'
-      return file
-    cipher = AES.new('This is a key123'.encode("utf8"), AES.MODE_CBC, 'This is an IV456'.encode("utf8"))
-    with open('vault.db','rb') as f:
-     orig_file = f.read()
-    padded_file = padText(orig_file)
-    encrypted_message = cipher.encrypt(padded_file)
-    with open('vault.db', 'wb') as e:
-      e.write(encrypted_message)
-
-  def decrypt():
-    cipher = AES.new('This is a key123'.encode("utf8"), AES.MODE_CBC, 'This is an IV456'.encode("utf8"))
-    with open('vault.db', 'rb') as e:
-      encrypted_file = e.read()
-    decrypted_file = cipher.decrypt(encrypted_file)
-    with open('vault.db', 'wb') as e:
-      e.write(decrypted_file)
-
-  encryptButton = Button(master, text="Encrypt", font="Helvetica", command=encrypt, cursor="hand2").pack(pady=5)
-  decryptButton = Button(master, text="Decrypt", font="Helvetica", command=decrypt, cursor="hand2").pack(pady=5)
-  viewButton = Button(master, text="View Database", font="Helvetica", command=vault.readDatabase, cursor="hand2").pack(pady=5)
-
-  global backImage
-  backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
-  backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
 def decryptUsers():
   file_exists = os.path.exists('users.db')
@@ -366,6 +332,28 @@ def decryptUsers():
     e.aes128Decrypt('users', "aE3xCj83")
   elif file_exists == False:
     print("File does not exist")
+
+def popUpChecksum():
+  popUpWindow = Toplevel(master)
+  popUpWindow.geometry("400x100")
+  popUpWindow.title("Checksum")
+  popUpWindow.resizable(False, False)
+  popUpWindow.config(background="white")
+  popUpWindow.iconbitmap(fileDirectory + "\\pictures\\warning.ico")
+  checksum = CheckSum()  
+  
+  try:
+    if db.findChecksum(db.findFile(mail)) == checksum.get_checksum(db.findFile(mail)):
+        warningLbl = Label(popUpWindow, text="Integrita overená: súbor je správny.", font="Helvetica 10")
+        warningLbl.config(anchor=CENTER, background="white")
+        warningLbl.pack(pady=5)
+    elif db.findChecksum(db.findFile(mail)) != checksum.get_checksum(db.findFile(mail)):
+        warningLbl = Label(popUpWindow, text="Integrita neoverená: súbor bol buď pozmenený, alebo je nový.", font="Helvetica 10")
+        warningLbl.config(anchor=CENTER, background="white")
+        warningLbl.pack(pady=5)
+  except IndexError:
+    print("No checksum yet.")
+
 
 decryptUsers() 
 firstScreen()
