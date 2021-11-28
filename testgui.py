@@ -111,9 +111,9 @@ def signUpScreen(): # Obrazovka registracie
   filenameEntry.pack()
 
   def addToDatabase(encryption): # Funkcia na pridanie informacii do databazoveho suboru o uzivateloch
-    signUpMail = mailEntry.get()
+    signUpMail = mailEntry.get().strip()
     signUpPassword = passwordEntry.get()
-    signUpFilename = filenameEntry.get()
+    signUpFilename = filenameEntry.get().strip()
     # Chceme zamedzit specialne znaky pri tvoreni mena suboru
     signUpFilename = ''.join(char for char in signUpFilename if char.isalnum()) 
     db = Database(signUpMail, signUpPassword)
@@ -274,7 +274,7 @@ def logInScreen(): # Prihlasovacie okno
     # Globalne premenne aby sme ziskane data mohli posunut do dalsich okien
     try:
       global mail
-      mail = mailEntry.get()
+      mail = mailEntry.get().strip()
       global password
       password = passwordEntry.get()
       global db
@@ -358,7 +358,7 @@ def twoFactorPopUp(): # Dvojfaktorove overenie - okno
         treeViewDatabase(db.findFile(mail))
         popUpChecksum()
     else: # Zadanie nespravneho kodu
-      warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
+      warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica", background="white")
       warningLbl.config(anchor=CENTER)
       warningLbl.pack()
 
@@ -410,4 +410,5 @@ master.mainloop()
 
 #To DO
 # Fixnut vecicky
-# Odstranit whitespaces z codeverification
+# Same id treeview chybova hlaska sqlite3.IntegrityError, alebo id nebolo zadane
+# Strip id treeview
