@@ -404,6 +404,23 @@ def popUpChecksum(): # Pop Up okno na overenie integrity suboru
   except IndexError:
     print("No checksum yet.")
 
+def introWarning(): 
+  # Varovanie pred skorym ukoncenim - ak zatvorime program krizikom, subor sa nestihne zasifrovat.
+  # Pri naslednom spusteni sa desifruje a tym sa stane subor necitatelnym - preto je potrebne ukoncovat program bezpecnym sposobom
+  # a na to urcenymi tlacitkami.
+  popUpWindow = Toplevel(master)
+  popUpWindow.geometry("450x100")
+  popUpWindow.title("Warning")
+  popUpWindow.resizable(False, False) # Zakaz menit velkost okna
+  popUpWindow.config(background="white")
+  popUpWindow.iconbitmap(fileDirectory + "\\pictures\\warning.ico")
+  # Napis oznamujuci tuto informaciu
+  warningLbl = Label(popUpWindow, text="Program je potrebné ukončiť uložením zmien, \nzatvorenie krížikom môže mať za následok zničenie súborov.", font="Helvetica 10")
+  warningLbl.config(anchor=CENTER, background="white")
+  warningLbl.pack(pady=5)
+
+
 decryptUsers() # Desifrovanie databaze uzivatelov ked otvorime aplikaciu.
 firstScreen() # Zavolanie prveho okna
+introWarning()
 master.mainloop() # Mainloop hlavneho okna
