@@ -30,11 +30,11 @@ logging.getLogger('PIL').setLevel(logging.WARNING)
 
 
 def firstScreen(): # Hlavna obrazovka pri spusteni
-  master.title("Password Manager")
-  master.iconbitmap(fileDirectory + "\\pictures\\lock.ico")
-  master.geometry("500x500")
-  master.configure(background="white")
-  for widget in master.winfo_children():
+  master.title("Password Manager") # Nazov okna
+  master.iconbitmap(fileDirectory + "\\pictures\\lock.ico") # Ikonka okna
+  master.geometry("500x500") # Rozmery okna
+  master.configure(background="white") # Konfiguracia okna (napr. biele pozadie)
+  for widget in master.winfo_children(): # Je potrebne vzdy znicit vsetky widgety, inak by sa v okne stale skladali pod seba
     widget.destroy()
 
   # Logo FEKT
@@ -114,6 +114,8 @@ def signUpScreen(): # Obrazovka registracie
     signUpMail = mailEntry.get()
     signUpPassword = passwordEntry.get()
     signUpFilename = filenameEntry.get()
+    # Chceme zamedzit specialne znaky pri tvoreni mena suboru
+    signUpFilename = ''.join(char for char in signUpFilename if char.isalnum()) 
     db = Database(signUpMail, signUpPassword)
     db.createTable()
     pwdb = PwDatabase()
@@ -143,9 +145,14 @@ def signUpScreen(): # Obrazovka registracie
       elif encryption == "aes256":
         logger.info("AES 256bit selected")
         e.aes256Encrypt(signUpFilename, signUpPassword)
-    except sqlite3.IntegrityError:
-      logger.info("Unsuccessful sign up with mail " + signUpMail)
+    except sqlite3.IntegrityError: # Ak sa email pouziva sqlite vyhodi error, kedze v databaze take data uz su
+      logger.info("Unsuccessful sign up with mail " + signUpMail + ": this e-mail already exists")
       warningLabel = Label(master, text="E-mail sa už používa.", font="Helvetica", background="white")
+      warningLabel.config(anchor=CENTER)
+      warningLabel.pack(pady=5)
+    except sqlite3.DatabaseError: # Ak sa nazov suboru pouziva, taktiez sqlite vyhodi error
+      logger.info("Unsuccessful sign up with mail " + signUpMail + ": this filename already exists")
+      warningLabel = Label(master, text="Názov databázy sa už používa.", font="Helvetica", background="white")
       warningLabel.config(anchor=CENTER)
       warningLabel.pack(pady=5)
 
@@ -344,34 +351,37 @@ def twoFactorPopUp(): # Dvojfaktorove overenie - okno
         e.aes256Decrypt(db.findFile(mail), password)
         treeViewDatabase(db.findFile(mail))
         popUpChecksum()
-    else:
+    else: # Zadanie nespravneho kodu
       warningLbl = Label(master, text="Nesprávny kód.", font="Helvetica")
       warningLbl.config(anchor=CENTER)
       warningLbl.pack()
 
+  # Tlacitko na potvrdenie
   global submitImage
   submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
   okButton = Button(master, image=submitImage, command=codeVerification, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
 
-def decryptUsers():
+def decryptUsers(): # Desifrovanie databazy uzivatelov
   file_exists = os.path.exists('users.db')
-  if file_exists == True:
+  if file_exists == True: # Otestujeme ci dany subor existuje
     print("File exists")
     e = Encryption()
     e.aes128Decrypt('users', "aE3xCj83")
   elif file_exists == False:
     print("File does not exist")
 
-def popUpChecksum():
+def popUpChecksum(): # Pop Up okno na overenie integrity suboru
   popUpWindow = Toplevel(master)
   popUpWindow.geometry("400x100")
   popUpWindow.title("Checksum")
-  popUpWindow.resizable(False, False)
+  popUpWindow.resizable(False, False) # Neda sa zmenit velkost
   popUpWindow.config(background="white")
   popUpWindow.iconbitmap(fileDirectory + "\\pictures\\warning.ico")
-  checksum = CheckSum()  
+  checksum = CheckSum() 
   
-  try:
+  # Overujeme checksum ulozeny v databaze users.db, ktory sa vytvoril ked sme ulozili subor a checksum vytvoreny pri zavolani funkcie,
+  # aby sme zistili ci sa so suborom manipulovalo mimo aplikacie alebo nie. Ak ano, pop up nam to oznami.
+  try: 
     if db.findChecksum(db.findFile(mail)) == checksum.get_checksum(db.findFile(mail)):
         warningLbl = Label(popUpWindow, text="Integrita overená: súbor je správny.", font="Helvetica 10")
         warningLbl.config(anchor=CENTER, background="white")
@@ -383,9 +393,9 @@ def popUpChecksum():
   except IndexError:
     print("No checksum yet.")
 
-decryptUsers() 
-firstScreen()
-master.mainloop()
+decryptUsers() # Desifrovanie databaze uzivatelov ked otvorime aplikaciu.
+firstScreen() # Zavolanie prveho okna
+master.mainloop() 
 
 #To DO
 # Button na navrat z codeverification 
