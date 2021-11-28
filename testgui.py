@@ -61,9 +61,11 @@ def firstScreen():
     if file_exists == True:
       e = Encryption()
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif file_exists == False:
       print("File does not exist")
+      logger.info("App exited")
       master.quit()
 
   global saveAndExitImage
@@ -120,16 +122,21 @@ def signUpScreen():
       success.config(anchor=CENTER)
       success.pack(pady = 5)
       if encryption == "des168":
+        logger.info("3DES 168bit selected")
         e.threeDes168Encrypt(signUpFilename, signUpPassword)
       elif encryption == "des112":
+        logger.info("3DES 112bit selected")
         e.threeDes112Encrypt(signUpFilename, signUpPassword)
       elif encryption == "chacha128":
         e.chaCha128Encrypt(signUpFilename, signUpPassword)
       elif encryption == "chacha256":
+        logger.info("ChaCha 256bit selected")
         e.chaCha256Encrypt(signUpFilename, signUpPassword)
       elif encryption == "aes128":
+        logger.info("AES 128bit selected")
         e.aes128Encrypt(signUpFilename, signUpPassword)
       elif encryption == "aes256":
+        logger.info("AES 256bit selected")
         e.aes256Encrypt(signUpFilename, signUpPassword)
     except sqlite3.IntegrityError:
       logger.info("Unsuccessful sign up with mail " + signUpMail)
@@ -176,6 +183,7 @@ def treeViewDatabase(filename):
   master.title("Vault")
   master.resizable(False, True)
   master.iconbitmap(fileDirectory + "\\pictures\\unlocked_lock.ico")
+  logger.info("Database viewed")
 
   def saveAndEncrypt():
     e = Encryption()
@@ -183,26 +191,32 @@ def treeViewDatabase(filename):
     if db.findEncryption(mail) == 'des168':
       e.threeDes168Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif db.findEncryption(mail) == 'des112':
       e.threeDes112Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif db.findEncryption(mail) == 'chacha128':
       e.chaCha128Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif db.findEncryption(mail) == 'chacha256':
       e.chaCha256Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif db.findEncryption(mail) == 'aes128':
       e.aes128Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
     elif db.findEncryption(mail) == 'aes256':
       e.aes256Encrypt(db.findFile(mail), password)
       e.aes128Encrypt('users', "aE3xCj83")
+      logger.info("App exited")
       master.quit()
 
   tree = treeViewDB()
