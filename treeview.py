@@ -71,14 +71,19 @@ class treeViewDB():
       def addToDatabase():
           conn = sqlite3.connect(filename + '.db')
           c = conn.cursor()
-          c.execute("INSERT INTO vault VALUES (:id, :service, :username, :password)",
-                    {
-                      'id': id_entry.get(),
-                      'service': service_entry.get(),
-                      'username': username_entry.get(),
-                      'password': password_entry.get()
-                    })
-          conn.commit()
+          try:
+            c.execute("INSERT INTO vault VALUES (:id, :service, :username, :password)",
+                      {
+                        'id': id_entry.get().strip(),
+                        'service': service_entry.get(),
+                        'username': username_entry.get(),
+                        'password': password_entry.get()
+                      })
+            conn.commit()
+          except sqlite3.IntegrityError:
+            warningLbl = Label(master, text="Id nebolo zadané, alebo už existuje.", font="Helvetica", background="white")
+            warningLbl.config(anchor=CENTER)
+            warningLbl.pack()
           clearBoxes()
           conn.close()
 

@@ -406,9 +406,4 @@ def popUpChecksum(): # Pop Up okno na overenie integrity suboru
 
 decryptUsers() # Desifrovanie databaze uzivatelov ked otvorime aplikaciu.
 firstScreen() # Zavolanie prveho okna
-master.mainloop() 
-
-#To DO
-# Fixnut vecicky
-# Same id treeview chybova hlaska sqlite3.IntegrityError, alebo id nebolo zadane
-# Strip id treeview
+master.mainloop() # Mainloop hlavneho okna
