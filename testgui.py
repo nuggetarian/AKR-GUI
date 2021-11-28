@@ -272,21 +272,27 @@ def logInScreen(): # Prihlasovacie okno
 
   def comparePasswords(): # Funkcia na porovnanie hesiel
     # Globalne premenne aby sme ziskane data mohli posunut do dalsich okien
-    global mail
-    mail = mailEntry.get()
-    global password
-    password = passwordEntry.get()
-    global db
-    db = Database(mail, password)
-    if (db.comparePasswords() == True):
-      logger.info("Log in successful as " + mail)
-      global se
-      se = sendEmail()
-      se.send_email(mail) # Odoslanie mailu s overovacim kodom
-      twoFactorPopUp() # Okno na vyplnenie overovacieho kodu
-    else:
-      logger.info("Log in unsuccessful as " + mail)
-      popUp() # Pop Up, ze sme zadali nespravne heslo
+    try:
+      global mail
+      mail = mailEntry.get()
+      global password
+      password = passwordEntry.get()
+      global db
+      db = Database(mail, password)
+      if (db.comparePasswords() == True):
+        logger.info("Log in successful as " + mail)
+        global se
+        se = sendEmail()
+        se.send_email(mail) # Odoslanie mailu s overovacim kodom
+        twoFactorPopUp() # Okno na vyplnenie overovacieho kodu
+      else:
+        logger.info("Log in unsuccessful as " + mail)
+        popUp() # Pop Up, ze sme zadali nespravne heslo
+    except: # Ak sa mail nenachadza v databaze, vypiseme tuto informaciu na obrazovku
+        logger.info("Unsuccessful log up with mail " + mail + ": e-mail isn't in the database")
+        warningLabel = Label(master, text="E-mail sa nenachádza v databáze.", font="Helvetica", background="white")
+        warningLabel.config(anchor=CENTER)
+        warningLabel.pack(pady=5)
 
   # Tlacidlo na funkciu comparePasswords
   global submitImage
