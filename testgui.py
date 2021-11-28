@@ -325,7 +325,7 @@ def twoFactorPopUp(): # Dvojfaktorove overenie - okno
   codeEntry.pack(pady=5)
 
   def codeVerification(): # Overenie kodu a desifrovanie 
-    if codeEntry.get() == se.getMessage():
+    if codeEntry.get().strip() == se.getMessage():
       e = Encryption()
       if db.findEncryption(mail) == 'des168':
         e.threeDes168Decrypt(db.findFile(mail), password)
@@ -356,10 +356,15 @@ def twoFactorPopUp(): # Dvojfaktorove overenie - okno
       warningLbl.config(anchor=CENTER)
       warningLbl.pack()
 
-  # Tlacitko na potvrdenie
+  # Tlacidlo na potvrdenie
   global submitImage
   submitImage = PhotoImage(file=fileDirectory + '\\pictures\\submit.png')
   okButton = Button(master, image=submitImage, command=codeVerification, borderwidth=0, cursor="hand2", activebackground="#fff", background="white").pack(pady=5)
+
+  # Tlacidlo na navrat do hlavneho okna
+  global backImage
+  backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
+  backButton = Button(master, image=backImage, command=firstScreen, cursor="hand2", borderwidth=0, background="white", activebackground="#fff").pack(pady=5)
 
 def decryptUsers(): # Desifrovanie databazy uzivatelov
   file_exists = os.path.exists('users.db')
@@ -398,6 +403,5 @@ firstScreen() # Zavolanie prveho okna
 master.mainloop() 
 
 #To DO
-# Button na navrat z codeverification 
-# Zle zadany nazov suboru - obrat ten sring o specialne znaky
 # Fixnut vecicky
+# Odstranit whitespaces z codeverification
