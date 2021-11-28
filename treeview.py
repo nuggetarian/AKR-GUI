@@ -9,69 +9,70 @@ from pwdatabase import PwDatabase
 
 class treeViewDB():
     def viewFromDatabase(self, master, filename):
+      # Funkcia na zobrazenie databazy v GUI
 
+      # Cesta do folderu v ktorom sa projekt nachadza, kvoli obrazkom
       absolutepath = os.path.abspath(__file__)
       fileDirectory = os.path.dirname(absolutepath) 
 
-      # Add Some Style
+      # Deklaracia stylu
       style = ttk.Style()
 
-      # Pick A Theme
+      # Vyber temy treeview
       style.theme_use("clam")
 
-      # Configure the Treeview Colors
+      # Nastavenie treeview farieb
       style.configure("Treeview", 
                       background="#fff",
                       foreground="black",
                       rowheight=25,
                       fieldbackground="#fff")
 
-      # Change Selected Color
+      # Zmena farby ked zvolime polozku
       style.map('Treeview',
                 background=[('selected', "#c22740")])
 
-      # Create a Treeview Frame
+      # Vytvorenie treeview frame-u
       tree_frame = Frame(master)
       tree_frame.pack(pady=10)
 
-      # Create a Treeview Scrollbar
+      # Vytvorenie scrollbaru
       tree_scroll = Scrollbar(tree_frame)
       tree_scroll.pack(side=RIGHT, fill=Y)
 
-      # Create The Treeview
+      # Vytvorenie treeview
       my_tree = ttk.Treeview(tree_frame, yscrollcommand=tree_scroll.set, selectmode="extended")
       my_tree.pack()
 
-      # Configure the Scrollbar
+      # Konfiguracia scrollbaru
       tree_scroll.config(command=my_tree.yview)
 
-      # Define Our Columns
+      # Definovanie stlpcov
       my_tree['columns'] = ("ID", "Service", "Username", "Password")
 
-      # Format Our Columns
+      # Formatovanie stlpcov
       my_tree.column("#0", width=0, stretch = NO)
       my_tree.column("ID", anchor=W, width=70)
       my_tree.column("Service", anchor=W, width=140)
       my_tree.column("Username", anchor=W, width=140)
       my_tree.column("Password", anchor=W, width=100)
 
-      # Create Headings
+      # Vytvorenie nadpisov
       my_tree.heading("#0", text="", anchor=W)
       my_tree.heading("ID", text="ID", anchor=W)
       my_tree.heading("Service", text="Service", anchor=W)
       my_tree.heading("Username", text="Username", anchor=W)
       my_tree.heading("Password", text="Password", anchor=W)
 
-
-      # Ceate Striped Row Tags
+      # Vytvorenie pruhovanych riadkov na zaklade toho ci su liche alebo sude
       my_tree.tag_configure('oddrow', background="white")
       my_tree.tag_configure('evenrow', background="#f78396")
 
-      # Functions
-      def addToDatabase():
+      def addToDatabase(): # Funkcia na pridanie nejakeho zaznamu do databazy
+          # Pripojene do databazy na zaklade nazvu suboru ktory sme zvolili pri registracii
           conn = sqlite3.connect(filename + '.db')
           c = conn.cursor()
-          try:
+          try: # Pridanie dat do tabulky
             c.execute("INSERT INTO vault VALUES (:id, :service, :username, :password)",
                       {
                         'id': id_entry.get().strip(),
@@ -81,39 +82,40 @@ class treeViewDB():
                       })
             conn.commit()
           except sqlite3.IntegrityError:
+            # Ak su chyby s ID mame to pokryte try-except
             warningLbl = Label(master, text="Id nebolo zadané, alebo už existuje.", font="Helvetica", background="white")
             warningLbl.config(anchor=CENTER)
             warningLbl.pack()
           clearBoxes()
           conn.close()
 
+          # Vymazanie riadku aj z GUI, nielen zo suboru
           my_tree.delete(*my_tree.get_children())
           readDatabase()
 
-      def readDatabase():
+      def readDatabase(): # Funkcia na precitanie databazy
           conn = sqlite3.connect(filename + '.db')
           c = conn.cursor()
           c.execute("SELECT * FROM vault")
           records = c.fetchall()
           global count
           count = 0
-          for record in records:
+          for record in records: # Pridavanie obsahu do sudych a lichych riadkov, aby sme ich mohli zafarbit, na zaklade tagu oddrow a evenrow
             if count % 2 == 0:
               my_tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('evenrow',))
             else:
               my_tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1], record[2], record[3]), tags=('oddrow',))
-            # Increment Counter
             count += 1
           conn.close()
 
-      def clearBoxes():
+      def clearBoxes(): # Funkcia na vycistenie entry boxov, tuto funkciu volame ked cosi pridame alebo zmazeme
         id_entry.delete(0, END)
         username_entry.delete(0, END)
         service_entry.delete(0, END)
         password_entry.delete(0, END)
 
-      def removeFromDatabase():
-          try:
+      def removeFromDatabase(): # Funkcia na zmazanie zaznamu
+          try: # Vymazanie na zaklade id ktore ziskame z pola, ked zvolime nejaky riadok
             x = my_tree.selection()[0]
             my_tree.delete(x)
             conn = sqlite3.connect(filename + '.db')
@@ -127,28 +129,28 @@ class treeViewDB():
             warningLbl = Label(master, text="Nič nebolo zvolené.", font="Helvetica", background="white")
             warningLbl.pack(pady=5)
               
-      def select_record(e):
-          # Clear entry boxes
+      def select_record(e): # Funkcia na vyplnenie entry boxov ked zvolime zaznam (klikneme na neho)
+          # Vycistenie entry boxov
           service_entry.delete(0, END)
           username_entry.delete(0, END)
           id_entry.delete(0, END)
           password_entry.delete(0, END)
 
-          # Grab record Number
+          # Zvolenie kliknuteho zaznamu
           selected = my_tree.focus()
-          # Grab record vales
+          # Ziskanie obsahu zaznamu
           values = my_tree.item(selected, 'values')
 
-          # outputs to entry boxes
+          # Vpisanie dat do entry boxov
           try:
             id_entry.insert(0, values[0])
             service_entry.insert(0, values[1])
             username_entry.insert(0, values[2]) 
             password_entry.insert(0, values[3])
-          except:
+          except: # Ked klikame mimo, nevyhadzuje nam to error, ale napise do konzole "Click."
             print("Click.")
 
-      # Boxes
+      # Samotne Boxy, vlozene do Frame-u a usporiadane
       data_frame = LabelFrame(master, text="Data", background="white", font="Helvetica")
       data_frame.pack(fill="x", expand="yes", padx=20)
 
@@ -172,7 +174,7 @@ class treeViewDB():
       password_entry = Entry(data_frame, borderwidth=2)
       password_entry.grid(row=1, column=3, padx=10, pady=10)
 
-      # Add Buttons
+      # Pridane tlacitka
       button_frame = LabelFrame(master, borderwidth=0, background="white")
       button_frame.pack(padx=10)
 
@@ -188,7 +190,8 @@ class treeViewDB():
       remove_one_button = Button(button_frame, image=removeImage, command=removeFromDatabase, cursor="hand2", borderwidth=0, background="white", activebackground="#fff")
       remove_one_button.grid(row=0, column=1 ,padx=10, pady=10)
 
-
+      # Pri uvolneni tlacidla 1 na mysi sa vykona funkcia select_record a zvoli sa dany zaznam
       my_tree.bind("<ButtonRelease-1>", select_record)
 
+      # Volanie funkcie na precitanie databazy
       readDatabase()

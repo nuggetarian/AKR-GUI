@@ -12,13 +12,12 @@ from treeview import treeViewDB
 from encryption import Encryption
 from checksum import CheckSum
 
+# Cesta do folderu v ktorom sa projekt nachadza, kvoli obrazkom
 absolutepath = os.path.abspath(__file__)
 fileDirectory = os.path.dirname(absolutepath)
 
 # Deklaracia hlavneho okna
 master = Tk()
-master.title("Password Manager")
-master.iconbitmap(fileDirectory + "\\pictures\\lock.ico")
 
 # Logger na zapis akcii
 logging.basicConfig(filename="logfile.log",
@@ -27,7 +26,6 @@ logging.basicConfig(filename="logfile.log",
 logger=logging.getLogger()
 logger.setLevel(logging.DEBUG)
 logging.getLogger('PIL').setLevel(logging.WARNING)
-
 
 def firstScreen(): # Hlavna obrazovka pri spusteni
   master.title("Password Manager") # Nazov okna
@@ -404,7 +402,7 @@ def popUpChecksum(): # Pop Up okno na overenie integrity suboru
   except IndexError:
     print("No checksum yet.")
 
-def introWarning(): 
+def introWarning(): # Pop Up s varovanim pri spusteni
   # Varovanie pred skorym ukoncenim - ak zatvorime program krizikom, subor sa nestihne zasifrovat.
   # Pri naslednom spusteni sa desifruje a tym sa stane subor necitatelnym - preto je potrebne ukoncovat program bezpecnym sposobom
   # a na to urcenymi tlacitkami.
@@ -418,7 +416,6 @@ def introWarning():
   warningLbl = Label(popUpWindow, text="Program je potrebné ukončiť uložením zmien, \nzatvorenie krížikom môže mať za následok zničenie súborov.", font="Helvetica 10")
   warningLbl.config(anchor=CENTER, background="white")
   warningLbl.pack(pady=5)
-
 
 decryptUsers() # Desifrovanie databaze uzivatelov ked otvorime aplikaciu.
 firstScreen() # Zavolanie prveho okna
