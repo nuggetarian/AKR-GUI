@@ -66,7 +66,11 @@ def firstScreen():
       print("File does not exist")
       master.quit()
 
-  saveAndExitButton = Button(master, text="Save & Exit", cursor="hand2", command=saveEndExit).pack(pady=5)
+  global saveAndExitImage
+  saveAndExitImage = PhotoImage(file=fileDirectory + '\\pictures\\saveaexit.png')
+  saveAndExitButton = Button(master, image=saveAndExitImage, cursor="hand2", command=saveEndExit,  borderwidth=0, activebackground="#fff")
+  saveAndExitButton.config(background="white")
+  saveAndExitButton.pack(pady=5)
 
 
   #treeViewBtn = Button(master, text="TreeView", font="Helvetica", command=treeView)
@@ -133,12 +137,6 @@ def signUpScreen():
       warningLabel.config(anchor=CENTER)
       warningLabel.pack(pady=5)
 
-  def printDatabase():
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    for row in c.execute('SELECT * FROM users;'):
-      print(row)
-
   chooseEncryptionLbl = Label(text="Zvoľ šifrovací algoritmus a dĺžku \nkľúča na ukončenie registrácie:", font="Helvetica 12", background="white")
   chooseEncryptionLbl.config(anchor=CENTER)
   chooseEncryptionLbl.pack(pady=5)
@@ -157,17 +155,15 @@ def signUpScreen():
   des168Image = PhotoImage(file=fileDirectory + '\\pictures\\3des168-1.png')
   aes128Image = PhotoImage(file=fileDirectory + '\\pictures\\aes128-1.png')
   aes256Image = PhotoImage(file=fileDirectory + '\\pictures\\aes256-1.png')
-  chacha128Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha128.png')
-  chacha256Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha256.png')
+  chacha128Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha128-1.png')
+  chacha256Image = PhotoImage(file=fileDirectory + '\\pictures\\chacha256-1.png')
 
-  des112Button = Button(buttonGrid, image=des112Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des112")).grid(row=0, column=0, padx=10, pady=10)
-  des168Button = Button(buttonGrid, image=des168Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des168")).grid(row=1, column=0, padx=10, pady=10)
-  chaCha128Button = Button(buttonGrid, image=chacha128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha128")).grid(row=0, column=1, padx=10, pady=10)
-  chaCha256Button = Button(buttonGrid, image=chacha256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha256")).grid(row=1, column=1, padx=10, pady=10)
-  aes128Button = Button(buttonGrid, image=aes128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes128")).grid(row=0, column=2, padx=10, pady=10)
-  aes256Button = Button(buttonGrid, image=aes256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes256")).grid(row=1, column=2, padx=10, pady=10)
-
-  funButton = Button(master, text="Print Database", font="Helvetica", command=printDatabase, borderwidth=1).pack(pady=5)
+  des112Button = Button(buttonGrid, image=des112Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des112"), activebackground="#fff").grid(row=0, column=0, padx=10, pady=10)
+  des168Button = Button(buttonGrid, image=des168Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("des168"), activebackground="#fff").grid(row=1, column=0, padx=10, pady=10)
+  #chaCha128Button = Button(buttonGrid, image=chacha128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha128"), activebackground="#fff").grid(row=0, column=1, padx=10, pady=10)
+  chaCha256Button = Button(buttonGrid, image=chacha256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("chacha256"), activebackground="#fff").grid(row=0, column=1, padx=10, pady=10)
+  aes128Button = Button(buttonGrid, image=aes128Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes128"), activebackground="#fff").grid(row=0, column=2, padx=10, pady=10)
+  aes256Button = Button(buttonGrid, image=aes256Image, background="white", cursor="hand2", borderwidth=0, command=lambda: addToDatabase("aes256"), activebackground="#fff").grid(row=1, column=2, padx=10, pady=10)
 
   global backImage
   backImage = PhotoImage(file=fileDirectory + '\\pictures\\back.png')
@@ -353,7 +349,6 @@ def popUpChecksum():
         warningLbl.pack(pady=5)
   except IndexError:
     print("No checksum yet.")
-
 
 decryptUsers() 
 firstScreen()
