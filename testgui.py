@@ -421,3 +421,5 @@ decryptUsers() # Desifrovanie databaze uzivatelov ked otvorime aplikaciu.
 firstScreen() # Zavolanie prveho okna
 introWarning()
 master.mainloop() # Mainloop hlavneho okna
+
+# ChaCha20 128bit bola zakomentovana, pretoze nepodporuje 128bit kluc

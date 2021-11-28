@@ -14,12 +14,12 @@ class Encryption:
     # Sifrovanie
     password.encode('utf8')
 
-
+    # Vypln kluca na pozadovanu dlzku - ako parameter na vytvorenie hesla pouzivame heslo uzivatela
     def keyGen(key):
             while len(key) % 21 != 0:
                 key = key + '0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key_hash = md5(keyGen(password).encode('utf8')).digest()
     
     tdes_key = DES3.adjust_key_parity(key_hash)
@@ -30,35 +30,38 @@ class Encryption:
       output.write(new_file_bytes)
 
   def threeDes168Decrypt(self, filename, password):
+    # Precitanie suboru
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
 
+    # Vypln kluca na pozadovanu dlzku - ako parameter na vytvorenie hesla pouzivame heslo uzivatela
     def keyGen(key):
             while len(key) % 21 != 0:
                 key = key + '0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key_hash = md5(keyGen(password).encode('utf8')).digest()
     tdes_key = DES3.adjust_key_parity(key_hash)
     cipher = DES3.new(tdes_key, DES3.MODE_EAX, nonce=b'0')  
     
+    # Zapisanie desifrovaneho obsahu do suboru
     new_file_bytes = cipher.decrypt(file_bytes)
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
 
   def threeDes112Encrypt(self, filename , password):
-     # Precitanie suboru
+    # Precitanie suboru
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
     # Sifrovanie
     password.encode('utf8')
 
-
+    # Vypln kluca na pozadovanu dlzku - ako parameter na vytvorenie hesla pouzivame heslo uzivatela
     def keyGen(key):
             while len(key) % 14 != 0:
                 key = key + '0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key_hash = md5(keyGen(password).encode('utf8')).digest()
     
     tdes_key = DES3.adjust_key_parity(key_hash)
@@ -69,23 +72,27 @@ class Encryption:
       output.write(new_file_bytes)  
             
   def threeDes112Decrypt(self, filename, password):
+    # Precitanie suboru
     with open(filename + '.db', 'rb') as input_file:
       file_bytes = input_file.read()
 
+    # Vypln kluca na pozadovanu dlzku - ako parameter na vytvorenie hesla pouzivame heslo uzivatela
     def keyGen(key):
             while len(key) % 14 != 0:
                 key = key + '0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key_hash = md5(keyGen(password).encode('utf8')).digest()
     tdes_key = DES3.adjust_key_parity(key_hash)
     cipher = DES3.new(tdes_key, DES3.MODE_EAX, nonce=b'0')  
     
+    # Zapis desifrovaneho obsahu do suboru
     new_file_bytes = cipher.decrypt(file_bytes)
     with open(filename + '.db', 'wb') as output:
       output.write(new_file_bytes)
 
-  def chaCha128Encrypt(self, filename, password):
+# ChaCha20 128bit zakomentovana - Kluc je prilis kratky pre tuto funkciu
+  """def chaCha128Encrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 16 != 0:
                 key = key + b'0'
@@ -109,9 +116,9 @@ class Encryption:
       nonc.write(nonce)
 
     output.close()
-    nonc.close()
+    nonc.close()"""
 
-  def chaCha128Decrypt(self, filename, password):
+  """def chaCha128Decrypt(self, filename, password):
     def keyGen(key):
             while len(key) % 16 != 0:
                 key = key + b'0'
@@ -140,56 +147,61 @@ class Encryption:
       ciphtext.close()
       dec.close()
     except ValueError or KeyError:
-      print("Incorrect decryption")
+      print("Incorrect decryption")"""
 
   def chaCha256Encrypt(self, filename, password):
+    # Vypln kluca
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key = keyGen(bytes(password, 'utf-8'))
 
-    # Načtení databáze do proměnné
     with open(filename + '.db', 'rb') as input_file:
         file_bytes = input_file.read()
     input_file.close()
 
+    # Sifrovanie
     plaintext = file_bytes
     cipher = ChaCha20.new(key=key)
     ciphertext = cipher.encrypt(plaintext)
     nonce = cipher.nonce
 
+    # Zapis zasifrovanych dat do suboru
     with open(filename + '.db', 'wb') as output:
       output.write(ciphertext)
-    with open(filename + '_nonce.txt', 'wb') as nonc:
+    with open(filename + '_nonce.txt', 'wb') as nonc: #ChaCha20 vyzaduje aj premennu nonce
       nonc.write(nonce)
 
     output.close()
     nonc.close()
 
   def chaCha256Decrypt(self, filename, password):
+    # Vypln kluca
     def keyGen(key):
             while len(key) % 32 != 0:
                 key = key + b'0'
             return key
-    # Generování klíče
+    # Generovanie kluca
     key = keyGen(bytes(password, 'utf-8'))
 
-    # Načtení databáze do proměnné
     with open(filename + '.db', 'rb') as input_file:
         file_bytes = input_file.read()
     input_file.close()
 
+    # Nacitanie suboru a nonce
     try:
       with open(filename + '_nonce.txt', 'rb') as nc:
         nonce = nc.read()
       with open(filename + '.db', 'rb')as ciphtext:
         ciphertext = ciphtext.read()
 
+    # Desifrovanie
       cipher = ChaCha20.new(key=key, nonce=nonce)
       dectext = cipher.decrypt(ciphertext)
 
+    # Zapis desifrovaneho obsahu
       with open(filename + '.db', 'wb') as dec:
         dec.write(dectext)
 
@@ -200,74 +212,89 @@ class Encryption:
       print("Incorrect decryption")
 
   def aes128Encrypt(self, filename, password):
-
+    # Vypln kluca
     def keyGen(key):
       while len(key) % 16 != 0:
           key = key + b'0'
       return key
+    # Generovanie kluca a inicializacny vektor
     key = keyGen(bytes(password, 'utf-8'))
     iv = "This is an IV456"
 
+    # Sifrovanie v mode CBC
     cipher = AES.new(key, AES.MODE_CBC, bytes(iv, 'utf-8'))
     with open(filename + '.db', 'rb') as f:
       message = f.read()
 
     ciphertext = cipher.encrypt(message)
 
+    # Ulozenie zasifrovaneho obsahu
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
   def aes128Decrypt(self, filename, password):
-
+    # Vypln kluca
     def keyGen(key):
       while len(key) % 16 != 0:
           key = key + b'0'
       return key
+
+    # Generovanie kluca a inicializacny vektor
     key = keyGen(bytes(password, 'utf-8'))
     iv = "This is an IV456"
 
+    # Desifrovanie suboru
     cipher = AES.new(key, AES.MODE_CBC, bytes(iv, 'utf-8'))
     with open(filename + '.db', 'rb') as f:
       message = f.read()
 
     ciphertext = cipher.decrypt(message)
 
+    # Ulozenie desifrovaneho obsahu
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
   def aes256Encrypt(self, filename, password):
-
+    # Vypln kluca
     def keyGen(key):
       while len(key) % 32 != 0:
           key = key + b'0'
       return key
+    
+    # Generovanie kluca a inicializacny vektor
     key = keyGen(bytes(password, 'utf-8'))
     iv = "This is an IV456"
 
+    # Sifrovanie v mode CBC
     cipher = AES.new(key, AES.MODE_CBC, bytes(iv, 'utf-8'))
     with open(filename + '.db', 'rb') as f:
       message = f.read()
 
     ciphertext = cipher.encrypt(message)
 
+    # Ulozenie zasifrovaneho obsahu
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
   def aes256Decrypt(self, filename, password):
-
+    # Vypln kluca
     def keyGen(key):
       while len(key) % 32 != 0:
           key = key + b'0'
       return key
+
+    # Generovanie kluca a inicializacny vektor
     key = keyGen(bytes(password, 'utf-8'))
     iv = "This is an IV456"
 
+    # Desifrovanie suboru
     cipher = AES.new(key, AES.MODE_CBC, bytes(iv, 'utf-8'))
     with open(filename + '.db', 'rb') as f:
       message = f.read()
 
     ciphertext = cipher.decrypt(message)
 
+    # Ulozenie desifrovaneho obsahu
     with open(filename + '.db', 'wb') as e:
       e.write(ciphertext)
 
