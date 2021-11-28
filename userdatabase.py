@@ -9,12 +9,12 @@ class Database:
   hashed = ""
   #filename = ""
 
-  def __init__(self, mail, password):
+  def __init__(self, mail, password): # Konstruktor
     self.mail = mail
     self.password = password
-    self.hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    self.hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()) # Heslo je zahashovane cez kniznicu bcrypt
 
-  def createTable(self):
+  def createTable(self): # Vytvorenie databazy s uzivatelmi
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     
@@ -27,14 +27,14 @@ class Database:
                   )""")
     conn.close()
 
-  def addValues(self, filename, encryption):
+  def addValues(self, filename, encryption): # Pridanie hodnot do tabulky
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("""INSERT INTO users ('mail', 'password', 'filename', 'encryption') VALUES (?, ?, ?, ?);""", (self.mail, self.hashed, filename, encryption))
     conn.commit()    
     conn.close()
   
-  def comparePasswords(self):
+  def comparePasswords(self): # Porovnanie hesla ktore sme zadali s heslom ktore mame v databaze, pouzivame bcrypt
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("SELECT password FROM users WHERE mail=:mail", {'mail': self.mail})
@@ -46,7 +46,7 @@ class Database:
     else:
       return False
 
-  def findFile(self, mail):
+  def findFile(self, mail): # Funkcia na najdenie suboru na zaklade mailu, ktory uzivatel pouzil pri vytvarani
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("SELECT filename FROM users WHERE mail=:mail", {'mail': mail})
@@ -55,7 +55,7 @@ class Database:
     conn.close()
     return result
 
-  def findEncryption(self, mail):
+  def findEncryption(self, mail): # Funkcia na najdenie aky sifrovaci algoritmus uzivatel zvolil
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("SELECT encryption FROM users WHERE mail=:mail", {'mail': mail})
@@ -64,7 +64,7 @@ class Database:
     conn.close()
     return result
 
-  def findChecksum(self, filename):
+  def findChecksum(self, filename): # Funkcia na najdenie checksumu ktory vznikol ked uzivatel ulozil subor
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     c.execute("SELECT checksum FROM users WHERE filename=:filename", {'filename': filename})
@@ -73,7 +73,7 @@ class Database:
     conn.close()
     return result
 
-  def addChecksumValues(self, filename):
+  def addChecksumValues(self, filename): # Funkcia na pridanie checksumu do databazy ked uzivatel ulozil subor
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     checksum = CheckSum()

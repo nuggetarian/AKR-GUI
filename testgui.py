@@ -392,11 +392,11 @@ def popUpChecksum(): # Pop Up okno na overenie integrity suboru
   # aby sme zistili ci sa so suborom manipulovalo mimo aplikacie alebo nie. Ak ano, pop up nam to oznami.
   try: 
     if db.findChecksum(db.findFile(mail)) == checksum.get_checksum(db.findFile(mail)):
-        warningLbl = Label(popUpWindow, text="Integrita overená: súbor je správny.", font="Helvetica 10")
+        warningLbl = Label(popUpWindow, text="Integrita overená: Súbor je správny.", font="Helvetica 10")
         warningLbl.config(anchor=CENTER, background="white")
         warningLbl.pack(pady=5)
     elif db.findChecksum(db.findFile(mail)) != checksum.get_checksum(db.findFile(mail)):
-        warningLbl = Label(popUpWindow, text="Integrita neoverená: súbor bol buď pozmenený, alebo je nový.", font="Helvetica 10")
+        warningLbl = Label(popUpWindow, text="Integrita neoverená: Súbor bol buď pozmenený, alebo je nový.", font="Helvetica 10")
         warningLbl.config(anchor=CENTER, background="white")
         warningLbl.pack(pady=5)
   except IndexError:

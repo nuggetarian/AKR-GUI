@@ -6,7 +6,7 @@ class PwDatabase:
   password = ""
   service = ""
 
-  def createTable(self, filename):
+  def createTable(self, filename): # Vytvorenie databazy s heslami, na zaklade uzivatelovho nazvu
     conn = sqlite3.connect(filename + '.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS vault (

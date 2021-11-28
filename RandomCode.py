@@ -3,8 +3,7 @@ import random
 
 class RandomCode:
 
-    def random_code(self):
-        self.char_number = 5  #dĺžka náhodne generovaného kódu
-        self.ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = self.char_number))    
-        #print("Your SECURITY CODE is : " + str(self.ran)) # vypíše nahodný kód   
+    def random_code(self): # Funkcia na generovanie nahodneho kodu
+        self.char_number = 5  # Dlzka nahodne generovaneho kodu
+        self.ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = self.char_number))      
         return self.ran  

@@ -1,4 +1,3 @@
-#from email import message
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -6,18 +5,17 @@ from RandomCode import RandomCode
 
 class sendEmail:
     
-    #recipient = input()
     rn = RandomCode()
     code = rn.random_code()
     
 
-    def send_email(self, recipient):
+    def send_email(self, recipient): # Funkcia na odoslanie mailu s kodom
+        # Udaje uctu ktory odosiela overovaci mail
         self.gmailUser = 'adventurousmanager@gmail.com'
         self.gmailPassword = '8^Tfj3@RGL'
         self.recipient = recipient
-        #'oliverbielik@gmail.com'
         
-        
+        # Obsah spravy
         message = str("YOUR SECURITY CODE IS: " + self.code)
 
         msg = MIMEMultipart()
@@ -26,6 +24,7 @@ class sendEmail:
         msg['Subject'] = "VERIFICATION CODE"
         msg.attach(MIMEText(message))
 
+        # Samotne odosielanie, pouziva sa kniznica email.mime a smtplib
         try:
             mailServer = smtplib.SMTP('smtp.gmail.com', 587)
             mailServer.ehlo()
@@ -38,5 +37,5 @@ class sendEmail:
         except:
             print ('Something went wrong...')
 
-    def getMessage(self):
+    def getMessage(self): # Getter pre kod ktory bol odoslany
         return str(self.code)
