@@ -2,29 +2,22 @@
 
 # Správce hesel s dvoufaktorovou autentizací
 
-It has been chosen
+Finished.
 
-Lets do it 
-
-#Email a heslo 
-ak by bolo treba mail na posielanie 2fa tak tu je k nemu pristup 
-
-mail: adventurousmanager@gmail.com
-
-heslo: 8^Tfj3@RGL
-
-#Treba nainštalovať 
+# Treba nainštalovať 
 
 bcrypt --> pip install bcrypt
 
 pycrypto --> pip install pycryptodome
 
-AK NEFUNGUJE BCRYPT
+Pillow --> pip install Pillow
+
+# Troubleshooting
+
+*Ak nefunguje interpreter vo vscode a nedetekuje knižnice:*
 
 python -m venv C:\Users\Michal\Desktop\AKR-GUI\AKR-GUI\venv
 
-Pillow --> pip install Pillow
-
-TREBA NAINŠTALOVAŤ
+*Ak je problém pri inštalácii Pillow:*
 
 pip install wheel
