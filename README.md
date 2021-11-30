@@ -16,7 +16,7 @@ Pillow --> pip install Pillow
 
 **Ak nefunguje interpreter vo vscode a nedetekuje knižnice:**
 
-*python -m venv C:\Users\Michal\Desktop\AKR-GUI\AKR-GUI\venv*
+*python -m venv C:\Users\User\Folder\AKR-GUI\venv*
 
 **Ak je problém pri inštalácii Pillow:**
 
