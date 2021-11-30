@@ -4,12 +4,21 @@ from tkinter import font
 import sqlite3
 from pwdatabase import PwDatabase
 import os
+import logging
 
 from pwdatabase import PwDatabase
 
 class treeViewDB():
     def viewFromDatabase(self, master, filename):
       # Funkcia na zobrazenie databazy v GUI
+
+      # Logger na zapis akcii
+      logging.basicConfig(filename="logfile.log",
+                          format='%(asctime)s %(message)s',
+                          filemode='a')
+      logger=logging.getLogger()
+      logger.setLevel(logging.DEBUG)
+      logging.getLogger('PIL').setLevel(logging.WARNING)
 
       # Cesta do folderu v ktorom sa projekt nachadza, kvoli obrazkom
       absolutepath = os.path.abspath(__file__)
@@ -81,8 +90,10 @@ class treeViewDB():
                         'password': password_entry.get()
                       })
             conn.commit()
+            logger.info("Password added")
           except sqlite3.IntegrityError:
             # Ak su chyby s ID mame to pokryte try-except
+            logger.info("Password adding failed")
             warningLbl = Label(master, text="Id nebolo zadané, alebo už existuje.", font="Helvetica", background="white")
             warningLbl.config(anchor=CENTER)
             warningLbl.pack()
@@ -122,7 +133,7 @@ class treeViewDB():
             c = conn.cursor()
             c.execute("DELETE FROM vault WHERE oid=" + id_entry.get())
             conn.commit()
-
+            logger.info("Password removed")
             clearBoxes()
             conn.close()		
           except:  
