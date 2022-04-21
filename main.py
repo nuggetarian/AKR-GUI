@@ -6,7 +6,7 @@ from userdatabase import Database
 import os
 import logging
 from PIL import ImageTk, Image
-from email_pokus import sendEmail
+from email_sender import sendEmail
 from Crypto.Cipher import AES
 from treeview import treeViewDB
 from encryption import Encryption
