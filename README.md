@@ -9,10 +9,6 @@ Použité technológie:
 - bcrypt
 - pycrypto
 
-# How to Use
--------------------------------
-
-
 # Features
 - Voľba šifrovacích algoritmov:
   - AES
