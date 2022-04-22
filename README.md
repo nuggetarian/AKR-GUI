@@ -20,6 +20,10 @@ Použité technológie:
 - Overenie integrity databázového súboru
 - Loggovanie
 
+# Screenshots
+<img src="images/image1.png" width="463" height="527">
+<img src="images/image2.PNG" width="463" height="527">
+
 # Dependencies
 
 bcrypt --> pip install bcrypt
