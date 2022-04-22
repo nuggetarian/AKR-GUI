@@ -2,9 +2,25 @@
 
 # Správce hesel s dvoufaktorovou autentizací
 
-Finished.
+Jednoduchý password manager.
+Použité technológie:
+- tkinter
+- sqlite
+- bcrypt
+- pycrypto
 
-# Treba nainštalovať 
+# Features
+- Voľba šifrovacích algoritmov:
+  - AES
+  - 3DES
+  - ChaCha
+- Voľba dĺžky kľúčov
+- Možnosť viacerých užívateľských účtov
+- Dvojfaktorová autentizácia cez e-mail
+- Overenie integrity databázového súboru
+- Loggovanie
+
+# Dependencies
 
 bcrypt --> pip install bcrypt
 
